@@ -16,7 +16,7 @@ function App() {
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
         <div>
-          <h1>Get started</h1>
+          <h1 className="text-3xl font-bold underline text-red-500">Get started</h1>
           <p>
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
@@ -38,7 +38,7 @@ function App() {
             <use href="/icons.svg#documentation-icon"></use>
           </svg>
           <h2>Documentation</h2>
-          <p>Your questions, answered</p>
+          <p className="text-3xl font-bold underline text-red-500">Your questions, answered</p>
           <ul>
             <li>
               <a href="https://vite.dev/" target="_blank">
