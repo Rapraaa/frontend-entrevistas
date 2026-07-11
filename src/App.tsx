@@ -5,6 +5,8 @@ import heroImg from './assets/hero.png'
 import './App.css'
 import { Button } from './ui/Button'
 import { Chip } from './ui/Chip'
+import { Card } from './ui/Card'
+import { PanelContexto } from './features/PanelContexto'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -23,6 +25,10 @@ function App() {
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
         </div>
+        <PanelContexto />,
+        <Card>
+
+
         <Button onClick={() => alert('si sirboxd')} disabled>
           desabilitao
         </Button>
@@ -31,7 +37,14 @@ function App() {
         </Button>
         <Button onClick={() => alert('si sirboxd')} data-theme='dark' variante='secundario'>
           el pepe
-        </Button>
+          </Button>
+        </Card>
+        <Card>
+          <Chip tono="verde">En línea</Chip>
+          <br></br>
+          <br></br>
+          <Button>Enviar</Button>
+        </Card>
         <Chip tono='lila'>Hola care bola</Chip>
         <Chip tono='verde'>Hola care pan</Chip>
         <Chip tono='rojo'>Hola care pan</Chip>
