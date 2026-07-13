@@ -14,6 +14,6 @@ const tonos = {
   rojo: 'bg-rojo text-ink',
   neutro: 'bg-surface2 text-fg'
 }
-export function Chip({ children, tono = 'lila', ...props }: Props) {
-  return (<span className={`inline-flex items-center border-2 px-2 py-1 font-mono border-ink uppercase font-bold text-[10px] ${tonos[tono]}`} {...props}>{children}</span>)
+export function Chip({ children, tono = 'lila', className = "", ...props }: Props) {
+  return (<span className={`inline-flex items-center border-2 px-2 py-1 font-mono border-ink uppercase font-bold text-[10px] ${tonos[tono]} ${className}`} {...props}>{children}</span>)
 }
