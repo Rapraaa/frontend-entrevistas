@@ -2,7 +2,7 @@ import type {ReactNode} from 'react'
 
 type Props = {
   variante?: 'ia' | 'user',
-  childen?: ReactNode
+  children?: ReactNode
 }
 
 const estilos = {
