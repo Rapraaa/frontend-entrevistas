@@ -50,7 +50,7 @@ jobs:
             rm -rf /var/www/front-simulador-entrevistas/*
             cp -r /tmp/react_build/dist/* /var/www/front-simulador-entrevistas/
 
-            chown -R www-data:www-data /var/www/front-simulador-entrevisstas
+            chown -R www-data:www-data /var/www/front-simulador-entrevistas
 
             nginx -t
             systemctl reload nginx
