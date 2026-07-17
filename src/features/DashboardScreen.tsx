@@ -37,8 +37,8 @@ export function DashboardScreen() {
             <h1 className="font-mono font-bold text-3xl text-fg uppercase">Mi Dashboard</h1>
             <p className="font-mono text-sm text-muted">Resumen de tus entrevistas de simulación.</p>
           </div>
-          {/* Navegamos a la configuración ("/") al hacer clic */}
-          <Button variante="primario" onClick={() => navigate('/')}>
+          {/* Navegamos a la configuración ("/setup") al hacer clic */}
+          <Button variante="primario" onClick={() => navigate('/setup')}>
             NUEVA SIMULACIÓN
           </Button>
         </div>

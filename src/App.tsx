@@ -7,9 +7,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SetupPage />} />
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/setup" element={<SetupPage />} />
         <Route path="/interview" element={<InterviewPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </BrowserRouter>
   );
