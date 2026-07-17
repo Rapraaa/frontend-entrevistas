@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SetupPage } from './pages/SetupPage';
 import { InterviewPage } from './pages/InterviewPage';
+import { DashboardPage } from './pages/DashboardPage';
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SetupPage />} />
         <Route path="/interview" element={<InterviewPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </BrowserRouter>
   );
