@@ -16,7 +16,7 @@ export function Home() {
       <Navbar>
         <button onClick={toggleTheme} className="px-3 border-2 border-ink bg-surface2"> ☀︎ </button>
         <a href="/login" className="font-mono font-bold text-fg">INICIAR SESIÓN</a>
-        <Button variante="primario" onClick={() => window.location.href = '/setup'}>REGISTRARSE</Button>
+        <Button variante="primario" onClick={() => window.location.href = '/registro'}>REGISTRARSE</Button>
       </Navbar>
       
       <main className="container mx-auto px-6 py-16 grid grid-cols-2 gap-12 items-start">
@@ -77,7 +77,7 @@ export function Home() {
         <Card className="bg-surface2 border-[3px] border-ink">
           <p className="text-muted text-xs mb-2 font-mono">IA_ENTREVISTADOR &gt; ¿Estás listo para el desafío?</p>
           <h2 className="text-3xl font-bold font-mono text-fg mb-6">CREA TU CUENTA Y COMIENZA HOY</h2>
-          <Button onClick={() => window.location.href = '/setup'}>
+          <Button onClick={() => window.location.href = '/registro'}>
             REGISTRARSE GRATIS →
           </Button>
         </Card>
