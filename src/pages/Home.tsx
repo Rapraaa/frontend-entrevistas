@@ -15,7 +15,7 @@ export function Home() {
     <div className="min-h-screen bg-base">
       <Navbar>
         <button onClick={toggleTheme} className="px-3 border-2 border-ink bg-surface2"> ☀︎ </button>
-        <a href="/setup" className="font-mono font-bold text-fg">INICIAR SESIÓN</a>
+        <a href="/login" className="font-mono font-bold text-fg">INICIAR SESIÓN</a>
         <Button variante="primario" onClick={() => window.location.href = '/setup'}>REGISTRARSE</Button>
       </Navbar>
       
@@ -28,7 +28,7 @@ export function Home() {
           <p className="text-muted text-lg mb-8">
             Configura rol, seniority y tecnologías. Conversa con una IA que actúa como entrevistador real, resuelve código en el editor integrado y recibe un reporte con puntaje detallado.
           </p>
-          <Button onClick={() => window.location.href = '/setup'}>EMPEZAR SIMULACIÓN →</Button>
+          <Button onClick={() => window.location.href = '/login'}>EMPEZAR SIMULACIÓN →</Button>
           
           <div className="flex gap-12 mt-12">
             <div><p className="text-3xl font-bold font-mono text-fg">500+</p><p className="text-xs text-muted">PREGUNTAS</p></div>
