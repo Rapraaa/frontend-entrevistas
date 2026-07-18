@@ -4,7 +4,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { api, getToken, setToken, clearToken } from '../lib/api';
+import { http, getToken, setToken, clearToken } from '../lib/api';
+import type { JwtUser } from '../lib/types';
 
 type AuthResponse = { access_token: string };
 
@@ -17,42 +18,60 @@ export type RegisterInput = {
 
 type AuthContextValue = {
   isAuthenticated: boolean;
+  user: JwtUser | null;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (input: RegisterInput) => Promise<void>;
   logout: () => void;
 };
 
+function decodeToken(token: string | null): JwtUser | null {
+  if (!token) return null;
+  try {
+    const payload = token.split('.')[1];
+    const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+    const parsed = JSON.parse(json) as JwtUser;
+    return { id: parsed.id, email: parsed.email, role: parsed.role };
+  } catch {
+    return null;
+  }
+}
+
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setTok] = useState<string | null>(getToken());
+  const [user, setUser] = useState<JwtUser | null>(() => decodeToken(getToken()));
+
+  const applyToken = (token: string) => {
+    setToken(token);
+    setUser(decodeToken(token));
+  };
 
   const login = async (email: string, password: string) => {
-    const { access_token } = await api<AuthResponse>('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
-    setToken(access_token);
-    setTok(access_token);
+    const { data } = await http.post<AuthResponse>('/auth/login', { email, password });
+    applyToken(data.access_token);
   };
 
   const register = async (input: RegisterInput) => {
-    const { access_token } = await api<AuthResponse>('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(input),
-    });
-    setToken(access_token);
-    setTok(access_token);
+    const { data } = await http.post<AuthResponse>('/auth/register', input);
+    applyToken(data.access_token);
   };
 
   const logout = () => {
     clearToken();
-    setTok(null);
+    setUser(null);
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated: !!token, login, register, logout }}
+      value={{
+        isAuthenticated: !!user,
+        user,
+        isAdmin: user?.role === 'admin',
+        login,
+        register,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>
