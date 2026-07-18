@@ -1,42 +1,64 @@
+import type { FormEvent } from 'react';
 import { ChatBubble } from '../ui/ChatBubble';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Chip } from '../ui/Chip';
+import type { ChatMessage, InterviewConfig } from '../lib/types';
 
-export function ChatPanel() {
+type Props = {
+  messages: ChatMessage[];
+  config?: InterviewConfig;
+  value: string;
+  onChange: (value: string) => void;
+  onSend: () => void;
+  sending: boolean;
+};
+
+export function ChatPanel({ messages, config, value, onChange, onSend, sending }: Props) {
+  const aiCount = messages.filter((m) => m.sender === 'ai').length;
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onSend();
+  };
+
   return (
     <div className="flex flex-col h-full w-[480px] bg-surface border-[3px] border-ink shadow-brutal">
 
       <div className="bg-surface2 border-b-[3px] border-ink p-4 flex flex-col gap-2">
         <div className="flex items-center justify-between gap-3">
           <h2 className="font-mono font-bold text-fg">ENTREVISTA TÉCNICA</h2>
-          <Chip>PREGUNTA 3/10</Chip>
+          <Chip>PREGUNTA {aiCount}</Chip>
         </div>
         <div className="flex gap-2 flex-wrap">
-          <Chip>ROL: BACKEND JR</Chip>
-          <Chip>NESTJS</Chip>
-          <Chip>TYPESCRIPT</Chip>
+          {config?.target_role && <Chip>ROL: {config.target_role.toUpperCase()}</Chip>}
+          {config?.technologies.map((t) => <Chip key={t}>{t.toUpperCase()}</Chip>)}
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
-        <ChatBubble variante="ia">
-          Pregunta 3: ¿qué es la inyección de dependencias en NestJS y por qué el framework la usa?
-        </ChatBubble>
-        <ChatBubble variante="user">
-          Es un patrón donde el framework crea las instancias y las provee donde se necesitan, en vez de que cada clase construya las suyas.
-        </ChatBubble>
-        <ChatBubble variante="ia">
-          Correcto. Ahora demuéstralo: implementa un provider inyectable en el editor de la derecha.
-        </ChatBubble>
+        {messages.map((m) => (
+          <ChatBubble key={m.sequence} variante={m.sender === 'ai' ? 'ia' : 'user'}>
+            {m.content}
+            {m.code_snippet && (
+              <pre className="mt-2 p-2 bg-base border-2 border-ink text-xs overflow-x-auto">{m.code_snippet}</pre>
+            )}
+          </ChatBubble>
+        ))}
+        {sending && <p className="font-mono text-xs text-muted">La IA está pensando_</p>}
       </div>
 
-      <div className="border-t-[3px] border-ink p-3 flex items-center gap-2">
+      <form onSubmit={handleSubmit} className="border-t-[3px] border-ink p-3 flex items-center gap-2">
         <div className="flex-1">
-          <Input placeholder="Escribe tu respuesta_" />
+          <Input
+            placeholder="Escribe tu respuesta_"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            disabled={sending}
+          />
         </div>
-        <Button>ENVIAR &gt;</Button>
-      </div>
+        <Button type="submit" disabled={sending}>ENVIAR &gt;</Button>
+      </form>
 
     </div>
   );

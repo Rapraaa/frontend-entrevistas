@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../ui/Navbar';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
@@ -5,6 +6,8 @@ import { Chip } from '../ui/Chip';
 import { ChatBubble } from '../ui/ChatBubble';
 
 export function Home() {
+  const navigate = useNavigate();
+
   const toggleTheme = () => {
     const html = document.documentElement;
     const isDark = html.getAttribute('data-theme') === 'dark';
@@ -15,10 +18,10 @@ export function Home() {
     <div className="min-h-screen bg-base">
       <Navbar>
         <button onClick={toggleTheme} className="px-3 border-2 border-ink bg-surface2"> ☀︎ </button>
-        <a href="/login" className="font-mono font-bold text-fg">INICIAR SESIÓN</a>
-        <Button variante="primario" onClick={() => window.location.href = '/setup'}>REGISTRARSE</Button>
+        <button onClick={() => navigate('/login')} className="font-mono font-bold text-fg">INICIAR SESIÓN</button>
+        <Button variante="primario" onClick={() => navigate('/registro')}>REGISTRARSE</Button>
       </Navbar>
-      
+
       <main className="container mx-auto px-6 py-16 grid grid-cols-2 gap-12 items-start">
         <section>
           <Chip tono="lila" className="mb-4">PROYECTO NESTJS - IA ENTREVISTADORA</Chip>
@@ -28,8 +31,8 @@ export function Home() {
           <p className="text-muted text-lg mb-8">
             Configura rol, seniority y tecnologías. Conversa con una IA que actúa como entrevistador real, resuelve código en el editor integrado y recibe un reporte con puntaje detallado.
           </p>
-          <Button onClick={() => window.location.href = '/login'}>EMPEZAR SIMULACIÓN →</Button>
-          
+          <Button onClick={() => navigate('/login')}>EMPEZAR SIMULACIÓN →</Button>
+
           <div className="flex gap-12 mt-12">
             <div><p className="text-3xl font-bold font-mono text-fg">500+</p><p className="text-xs text-muted">PREGUNTAS</p></div>
             <div><p className="text-3xl font-bold font-mono text-fg">12+</p><p className="text-xs text-muted">TECNOLOGÍAS</p></div>
@@ -77,7 +80,7 @@ export function Home() {
         <Card className="bg-surface2 border-[3px] border-ink">
           <p className="text-muted text-xs mb-2 font-mono">IA_ENTREVISTADOR &gt; ¿Estás listo para el desafío?</p>
           <h2 className="text-3xl font-bold font-mono text-fg mb-6">CREA TU CUENTA Y COMIENZA HOY</h2>
-          <Button onClick={() => window.location.href = '/registro'}>
+          <Button onClick={() => navigate('/registro')}>
             REGISTRARSE GRATIS →
           </Button>
         </Card>
