@@ -16,7 +16,7 @@ export function Home() {
       <Navbar>
         <button onClick={toggleTheme} className="px-3 border-2 border-ink bg-surface2"> ☀︎ </button>
         <a href="/login" className="font-mono font-bold text-fg">INICIAR SESIÓN</a>
-        <Button variante="primario" onClick={() => window.location.href = '/registro'}>REGISTRARSE</Button>
+        <Button variante="primario" onClick={() => window.location.href = '/setup'}>REGISTRARSE</Button>
       </Navbar>
       
       <main className="container mx-auto px-6 py-16 grid grid-cols-2 gap-12 items-start">
