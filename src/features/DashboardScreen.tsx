@@ -1,96 +1,111 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Chip } from '../ui/Chip';
 import { Navbar } from '../ui/Navbar';
 import { Avatar } from '../ui/Avatar';
+import { getHistory } from '../lib/interviews';
+import { ApiError } from '../lib/api';
+import type { Interview } from '../lib/types';
 
 export function DashboardScreen() {
   const navigate = useNavigate();
 
-  // Mock data para las métricas globales
-  const metrics = {
-    totalSimulations: 12,
-    averageScore: 85,
-    bestScore: 98,
-    streak: 3
-  };
+  const [history, setHistory] = useState<Interview[]>([]);
+  const [error, setError] = useState('');
 
-  // Mock data para el historial reciente
-  const recentHistory = [
-    { id: 1, role: 'Frontend Developer', date: '2026-07-16', score: 90, difficulty: 'Media' },
-    { id: 2, role: 'Backend Developer', date: '2026-07-14', score: 78, difficulty: 'Alta' },
-    { id: 3, role: 'Fullstack Developer', date: '2026-07-10', score: 88, difficulty: 'Baja' },
-  ];
+  useEffect(() => {
+    getHistory()
+      .then(setHistory)
+      .catch((err) =>
+        setError(err instanceof ApiError ? err.message : 'Error al cargar el historial'),
+      );
+  }, []);
+
+  const completadas = history.filter((h) => h.status === 'completed');
+  const scores = completadas
+    .map((h) => h.evaluation?.score)
+    .filter((s): s is number => typeof s === 'number');
+  const averageScore = scores.length
+    ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+    : 0;
+  const bestScore = scores.length ? Math.max(...scores) : 0;
+
+  const openInterview = (item: Interview) => {
+    if (item.status === 'completed') {
+      navigate(`/resultado/${item._id}`);
+    } else {
+      navigate(`/interview/${item._id}`);
+    }
+  };
 
   return (
     <div className="flex flex-col h-screen bg-base overflow-auto">
       <Navbar>
-        <Avatar iniciales="CD" />
+        <Avatar iniciales="RH" />
       </Navbar>
-      
+
       <div className="flex-1 max-w-5xl w-full mx-auto p-6 flex flex-col gap-8">
-        
-        {/* Encabezado y botón principal */}
+
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b-2 border-ink pb-4">
           <div>
             <h1 className="font-mono font-bold text-3xl text-fg uppercase">Mi Dashboard</h1>
             <p className="font-mono text-sm text-muted">Resumen de tus entrevistas de simulación.</p>
           </div>
-          {/* Navegamos a la configuración ("/setup") al hacer clic */}
           <Button variante="primario" onClick={() => navigate('/setup')}>
             NUEVA SIMULACIÓN
           </Button>
         </div>
 
-        {/* Sección de Métricas Globales */}
+        {error && <div className="p-3 border-2 border-ink bg-rojo text-ink font-mono font-bold">{error}</div>}
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card className="text-center p-4">
             <h3 className="font-mono text-xs text-muted font-bold uppercase mb-2">Simulaciones</h3>
-            <p className="font-mono text-3xl font-bold text-fg">{metrics.totalSimulations}</p>
+            <p className="font-mono text-3xl font-bold text-fg">{history.length}</p>
           </Card>
           <Card className="text-center p-4">
             <h3 className="font-mono text-xs text-muted font-bold uppercase mb-2">Promedio</h3>
-            <p className="font-mono text-3xl font-bold text-verde">{metrics.averageScore}</p>
+            <p className="font-mono text-3xl font-bold text-verde">{averageScore}</p>
           </Card>
           <Card className="text-center p-4">
             <h3 className="font-mono text-xs text-muted font-bold uppercase mb-2">Mejor Puntaje</h3>
-            <p className="font-mono text-3xl font-bold text-lila">{metrics.bestScore}</p>
+            <p className="font-mono text-3xl font-bold text-lila">{bestScore}</p>
           </Card>
           <Card className="text-center p-4">
-            <h3 className="font-mono text-xs text-muted font-bold uppercase mb-2">Racha (Días)</h3>
-            <p className="font-mono text-3xl font-bold text-rojo">🔥 {metrics.streak}</p>
+            <h3 className="font-mono text-xs text-muted font-bold uppercase mb-2">Completadas</h3>
+            <p className="font-mono text-3xl font-bold text-rojo">{completadas.length}</p>
           </Card>
         </div>
 
-        {/* Sección de Historial Reciente */}
         <div>
           <h2 className="font-mono font-bold text-xl text-fg uppercase mb-4">Historial Reciente</h2>
           <Card className="p-0 overflow-hidden">
-            {recentHistory.length === 0 ? (
+            {history.length === 0 ? (
               <div className="p-6 text-center font-mono text-muted">No hay simulaciones recientes.</div>
             ) : (
               <div className="flex flex-col">
-                {recentHistory.map((item, index) => (
-                  <div 
-                    key={item.id} 
-                    className={`flex flex-col md:flex-row items-start md:items-center justify-between p-4 ${index !== recentHistory.length - 1 ? 'border-b-2 border-ink' : ''}`}
+                {history.map((item, index) => (
+                  <button
+                    key={item._id}
+                    onClick={() => openInterview(item)}
+                    className={`flex flex-col md:flex-row items-start md:items-center justify-between p-4 text-left hover:bg-surface2 transition-colors ${index !== history.length - 1 ? 'border-b-2 border-ink' : ''}`}
                   >
                     <div className="flex flex-col mb-2 md:mb-0">
-                      <span className="font-mono font-bold text-fg text-lg">{item.role}</span>
-                      <span className="font-mono text-xs text-muted">{item.date}</span>
+                      <span className="font-mono font-bold text-fg text-lg">{item.config.target_role}</span>
+                      <span className="font-mono text-xs text-muted">{item.created_at?.slice(0, 10) ?? '—'}</span>
                     </div>
-                    
+
                     <div className="flex items-center gap-4">
-                      {/* Mapeamos el color del Chip según la dificultad */}
-                      <Chip tono={item.difficulty === 'Alta' ? 'rojo' : item.difficulty === 'Media' ? 'lila' : 'verde'}>
-                        {item.difficulty}
+                      <Chip tono={item.status === 'completed' ? 'verde' : 'lila'}>
+                        {item.status === 'completed' ? 'COMPLETADA' : 'EN CURSO'}
                       </Chip>
                       <div className="font-mono font-bold text-lg text-fg w-12 text-right">
-                        {item.score}
+                        {item.evaluation?.score ?? '—'}
                       </div>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
