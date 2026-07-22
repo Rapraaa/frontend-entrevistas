@@ -32,7 +32,6 @@ export function EditorPanel({
   onLenguajeChange,
 }: Props) {
   const [tab, setTab] = useState<Tab>('solucion');
-  // Las notas son un bloc personal del candidato: NO se envían a la IA.
   const [notas, setNotas] = useState('');
   const [salida, setSalida] = useState<Resultado | null>(null);
   const [corriendo, setCorriendo] = useState(false);
