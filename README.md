@@ -1,4 +1,4 @@
-# Simulador de Entrevistas Técnicas con IA — Frontend
+# Praxis — Simulador de Entrevistas Técnicas con IA (Frontend)
 
 Aplicación web (ReactJS + Vite) que consume la API REST en NestJS del simulador de
 entrevistas técnicas. Permite configurar una entrevista, conversar con una IA
