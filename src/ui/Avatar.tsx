@@ -1,10 +1,28 @@
 type Props = {
-  iniciales: string; //todo: mejorar para que saque las iniciales de el nombre
+  iniciales: string;
+  src?: string | null;
+  size?: number;
 };
 
-export function Avatar({ iniciales }: Props) {
+export function Avatar({ iniciales, src, size = 32 }: Props) {
+  const style = { width: size, height: size };
+
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt="Foto de perfil"
+        style={style}
+        className="object-cover border-2 border-ink"
+      />
+    );
+  }
+
   return (
-    <div className="flex items-center justify-center w-8 h-8 bg-lila border-2 border-ink font-mono font-bold text-xs text-ink">
+    <div
+      style={style}
+      className="flex items-center justify-center bg-lila border-2 border-ink font-mono font-bold text-xs text-ink"
+    >
       {iniciales}
     </div>
   );

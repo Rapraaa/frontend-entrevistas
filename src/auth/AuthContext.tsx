@@ -2,9 +2,12 @@ import {
   createContext,
   useContext,
   useState,
+  useEffect,
+  useCallback,
   type ReactNode,
 } from 'react';
 import { http, getToken, setToken, clearToken } from '../lib/api';
+import { getUser, type UserProfile } from '../lib/users';
 import type { JwtUser } from '../lib/types';
 
 type AuthResponse = { access_token: string };
@@ -19,9 +22,13 @@ export type RegisterInput = {
 type AuthContextValue = {
   isAuthenticated: boolean;
   user: JwtUser | null;
+  /** Perfil completo (incluye la foto). Se carga tras autenticarse. */
+  profile: UserProfile | null;
   isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (input: RegisterInput) => Promise<void>;
+  loginWithToken: (token: string) => void;
+  refreshProfile: () => Promise<void>;
   logout: () => void;
 };
 
@@ -41,6 +48,23 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<JwtUser | null>(() => decodeToken(getToken()));
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+
+  const refreshProfile = useCallback(async () => {
+    if (!user?.id) {
+      setProfile(null);
+      return;
+    }
+    try {
+      setProfile(await getUser(user.id));
+    } catch {
+      setProfile(null);
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
+    refreshProfile();
+  }, [refreshProfile]);
 
   const applyToken = (token: string) => {
     setToken(token);
@@ -60,6 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     clearToken();
     setUser(null);
+    setProfile(null);
   };
 
   return (
@@ -67,9 +92,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         isAuthenticated: !!user,
         user,
+        profile,
         isAdmin: user?.role === 'admin',
         login,
         register,
+        loginWithToken: applyToken,
+        refreshProfile,
         logout,
       }}
     >
