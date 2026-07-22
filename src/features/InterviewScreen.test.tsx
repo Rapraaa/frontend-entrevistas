@@ -46,7 +46,6 @@ describe('InterviewScreen', () => {
   it('abre el editor en el lenguaje deducido de las tecnologías', async () => {
     renderScreen();
 
-    // La entrevista usa NestJS, así que el archivo debe ser .ts (no .js por defecto).
     expect(await screen.findByText('solucion.ts')).toBeInTheDocument();
     expect(screen.getByText('notas.md')).toBeInTheDocument();
   });
