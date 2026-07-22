@@ -14,10 +14,6 @@ export type Resultado = {
 const JUDGE0 = 'https://ce.judge0.com';
 const LIMITE_MS = 25000;
 
-// ---------------------------------------------------------------------------
-// Respaldo local para JavaScript: Web Worker aislado (sin DOM ni localStorage),
-// en otro hilo y con timeout, para que un bucle infinito no congele la UI.
-// ---------------------------------------------------------------------------
 const FUENTE_WORKER = `
 self.onmessage = function (e) {
   var logs = [];
@@ -78,9 +74,6 @@ export function ejecutarLocal(codigo: string, ms = 3000): Promise<Resultado> {
   });
 }
 
-// ---------------------------------------------------------------------------
-// Ejecución remota (Judge0): soporta todos los lenguajes del selector.
-// ---------------------------------------------------------------------------
 type RespuestaJudge0 = {
   stdout: string | null;
   stderr: string | null;
@@ -122,7 +115,6 @@ async function ejecutarRemoto(codigo: string, languageId: number): Promise<Resul
       estado,
       tiempo: data.time ?? undefined,
       memoria: data.memory ?? undefined,
-      // Si no hubo salida pero el estado no es "Accepted", mostramos el motivo.
       error: estado && estado !== 'Accepted' && logs.length === 0 ? estado : undefined,
     };
   } finally {
@@ -130,10 +122,6 @@ async function ejecutarRemoto(codigo: string, languageId: number): Promise<Resul
   }
 }
 
-/**
- * Ejecuta el código en el lenguaje indicado.
- * Usa Judge0; si falla y es JavaScript, cae al worker local como respaldo.
- */
 export async function ejecutar(codigo: string, lenguaje: Lenguaje): Promise<Resultado> {
   try {
     return await ejecutarRemoto(codigo, lenguaje.judge0Id);
