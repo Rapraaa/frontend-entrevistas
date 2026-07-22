@@ -7,6 +7,7 @@ import { Select } from '../ui/Select';
 import { Input } from '../ui/Input';
 import { Chip } from '../ui/Chip';
 import { getCatalog, createInterview } from '../lib/interviews';
+import { listTechnologies } from '../lib/catalogs';
 import { ApiError } from '../lib/api';
 
 const FALLBACK = {
@@ -28,6 +29,7 @@ export function SetupScreen() {
 
   const [techInput, setTechInput] = useState('');
   const [technologies, setTechnologies] = useState<string[]>([]);
+  const [sugerencias, setSugerencias] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -56,10 +58,16 @@ export function SetupScreen() {
           setSeniority(names[0]);
         }
       } catch {
-        // se mantienen los valores por defecto
+        setError('');
       }
     };
     load();
+  }, []);
+
+  useEffect(() => {
+    listTechnologies()
+      .then((res) => setSugerencias(res.data.map((t) => t.name)))
+      .catch(() => setSugerencias([]));
   }, []);
 
   const handleAddTech = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -133,7 +141,14 @@ export function SetupScreen() {
                 value={techInput}
                 onChange={(e) => setTechInput(e.target.value)}
                 onKeyDown={handleAddTech}
+                list="sugerencias-tecnologias"
+                autoComplete="off"
               />
+              <datalist id="sugerencias-tecnologias">
+                {sugerencias.map((s) => (
+                  <option key={s} value={s} />
+                ))}
+              </datalist>
               <div className="flex flex-wrap gap-2 mt-2">
                 {technologies.map((tech) => (
                   <button type="button" key={tech} onClick={() => removeTech(tech)}>

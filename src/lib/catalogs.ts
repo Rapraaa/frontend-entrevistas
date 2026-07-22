@@ -24,6 +24,17 @@ export const CATALOGS = [
   { slug: 'companies', label: 'Empresas' },
 ] as const;
 
+export type Tecnologia = {
+  id: string;
+  name: string;
+  isActive?: boolean;
+};
+
+export async function listTechnologies(): Promise<Paginated<Tecnologia>> {
+  const { data } = await http.get('/technologies', { params: { limit: 100 } });
+  return data;
+}
+
 export async function listCatalog(
   name: string,
   query: CatalogQuery = {},
