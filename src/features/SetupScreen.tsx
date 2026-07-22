@@ -6,8 +6,6 @@ import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Input } from '../ui/Input';
 import { Chip } from '../ui/Chip';
-import { Navbar } from '../ui/Navbar';
-import { Avatar } from '../ui/Avatar';
 import { getCatalog, createInterview } from '../lib/interviews';
 import { ApiError } from '../lib/api';
 
@@ -15,7 +13,6 @@ const FALLBACK = {
   types: ['Técnica', 'Teórica'],
   roles: ['Frontend Developer', 'Backend Developer', 'Fullstack Developer'],
   seniorities: ['Junior', 'Mid', 'Senior'],
-  difficulties: ['Baja', 'Media', 'Alta'],
 };
 
 export function SetupScreen() {
@@ -24,12 +21,10 @@ export function SetupScreen() {
   const [interviewTypes, setInterviewTypes] = useState<string[]>(FALLBACK.types);
   const [jobRoles, setJobRoles] = useState<string[]>(FALLBACK.roles);
   const [seniorities, setSeniorities] = useState<string[]>(FALLBACK.seniorities);
-  const [difficulties, setDifficulties] = useState<string[]>(FALLBACK.difficulties);
 
   const [interviewType, setInterviewType] = useState(FALLBACK.types[0]);
   const [targetRole, setTargetRole] = useState(FALLBACK.roles[0]);
   const [seniority, setSeniority] = useState(FALLBACK.seniorities[0]);
-  const [difficulty, setDifficulty] = useState(FALLBACK.difficulties[0]);
 
   const [techInput, setTechInput] = useState('');
   const [technologies, setTechnologies] = useState<string[]>([]);
@@ -40,11 +35,10 @@ export function SetupScreen() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [types, roles, levels, diffs] = await Promise.all([
+        const [types, roles, levels] = await Promise.all([
           getCatalog('interview-types'),
           getCatalog('job-roles'),
           getCatalog('seniority-levels'),
-          getCatalog('difficulty-levels'),
         ]);
         if (types.data.length) {
           const names = types.data.map((c) => c.name);
@@ -60,11 +54,6 @@ export function SetupScreen() {
           const names = levels.data.map((c) => c.name);
           setSeniorities(names);
           setSeniority(names[0]);
-        }
-        if (diffs.data.length) {
-          const names = diffs.data.map((c) => c.name);
-          setDifficulties(names);
-          setDifficulty(names[0]);
         }
       } catch {
         // se mantienen los valores por defecto
@@ -112,12 +101,9 @@ export function SetupScreen() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-base overflow-auto">
-      <Navbar>
-        <Avatar iniciales="RH" />
-      </Navbar>
-      <div className="flex-1 flex items-center justify-center p-6">
-        <Card className="w-full max-w-2xl">
+    <div className="min-h-full flex items-start justify-center p-6">
+      <div className="w-full max-w-2xl">
+        <Card className="w-full">
           <h1 className="font-mono font-bold text-2xl text-fg mb-6 uppercase border-b-2 border-ink pb-2">
             Configuración de Simulación
           </h1>
@@ -138,9 +124,6 @@ export function SetupScreen() {
                 {seniorities.map((s) => <option key={s} value={s}>{s}</option>)}
               </Select>
 
-              <Select label="Dificultad" value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
-                {difficulties.map((d) => <option key={d} value={d}>{d}</option>)}
-              </Select>
             </div>
 
             <div className="flex flex-col gap-2">

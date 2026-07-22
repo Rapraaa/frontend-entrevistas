@@ -2,12 +2,15 @@
 
 @theme {
     --color-ink: #141110;
+    /* Claro FIJO (no cambia con el tema): para texto sobre fondos ink */
+    --color-papel: #f7f2e8;
     --color-naranja: #e8622c;
     --color-lila: #b79ced;
     --color-verde: #6bcb77;
     --color-rojo: #ef6461;
     --font-mono: "JetBrains Mono", ui-monospace, monospace;
     --shadow-brutal: 4px 4px 0 0 var(--color-ink);
+    --shadow-brutal-lg: 8px 8px 0 0 var(--color-ink);
 }
 
 @theme inline {
@@ -32,4 +35,51 @@
     --surface2: #3a322b;
     --fg: #f2ece1;
     --muted: #a79a89;
+    --punto: rgba(242, 236, 225, 0.12);
+}
+
+:root {
+    --punto: rgba(20, 17, 16, 0.10);
+}
+
+/* Textura de puntos: solo pinta background-image, el color lo sigue dando bg-base */
+.patron-puntos {
+    background-image: radial-gradient(var(--punto) 1.5px, transparent 1.5px);
+    background-size: 22px 22px;
+}
+
+/* Impresión: solo el contenido, en claro y sin recortes */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    :root {
+        --base: #ffffff;
+        --surface: #ffffff;
+        --surface2: #f2f2f2;
+        --fg: #000000;
+        --muted: #444444;
+    }
+    html,
+    body,
+    #root,
+    main {
+        height: auto !important;
+        overflow: visible !important;
+    }
+    .patron-puntos {
+        background-image: none !important;
+    }
+    .shadow-brutal {
+        box-shadow: none !important;
+    }
+}
+
+/* Micro-interacción: la tarjeta se levanta y la sombra crece */
+.lift {
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.lift:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0 0 var(--color-ink);
 }

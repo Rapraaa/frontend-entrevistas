@@ -6,11 +6,14 @@ import { Card } from '../ui/Card';
 import { Chip } from '../ui/Chip';
 import { getCatalogItem, CATALOGS } from '../lib/catalogs';
 import { ApiError } from '../lib/api';
+import { useAuth } from '../auth/AuthContext';
+import { ThemeToggle } from '../ui/ThemeToggle';
 import type { CatalogItem } from '../lib/types';
 
 export function PublicCatalogDetail() {
   const { slug = '', id = '' } = useParams();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const [item, setItem] = useState<CatalogItem | null>(null);
   const [error, setError] = useState('');
@@ -26,8 +29,15 @@ export function PublicCatalogDetail() {
   return (
     <div className="min-h-screen bg-base">
       <Navbar>
-        <Button variante="secundario" onClick={() => navigate('/login')}>INICIAR SESIÓN</Button>
-        <Button variante="primario" onClick={() => navigate('/registro')}>REGISTRARSE</Button>
+        <ThemeToggle />
+        {isAuthenticated ? (
+          <Button variante="primario" onClick={() => navigate('/dashboard')}>IR AL DASHBOARD</Button>
+        ) : (
+          <>
+            <Button variante="secundario" onClick={() => navigate('/login')}>INICIAR SESIÓN</Button>
+            <Button variante="primario" onClick={() => navigate('/registro')}>REGISTRARSE</Button>
+          </>
+        )}
       </Navbar>
 
       <main className="max-w-2xl mx-auto p-6 flex flex-col gap-6">

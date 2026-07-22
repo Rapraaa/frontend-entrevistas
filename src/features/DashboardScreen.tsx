@@ -2,15 +2,31 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, Legend,
+  PieChart, Pie, Cell, Legend, CartesianGrid,
 } from 'recharts';
+import {
+  Layers, TrendingUp, Trophy, CheckCircle2, BarChart3,
+  PieChart as PieIcon, History, Inbox, Plus, ChevronRight,
+} from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Chip } from '../ui/Chip';
+import { StatCard } from '../ui/StatCard';
+import { EmptyState } from '../ui/EmptyState';
 import { getHistory } from '../lib/interviews';
 import { ApiError } from '../lib/api';
 import type { Interview } from '../lib/types';
 
+const INK = '#141110';
+// Los ejes/rejilla usan la variable del tema para que se vean en claro Y en oscuro.
+const EJE = 'var(--fg)';
+const TOOLTIP = {
+  border: `2px solid ${INK}`,
+  borderRadius: 0,
+  fontFamily: 'monospace',
+  background: 'var(--surface)',
+  color: 'var(--fg)',
+};
 const COLORS = ['#6bcb77', '#b79ced', '#e8622c', '#ef6461'];
 
 export function DashboardScreen() {
@@ -42,16 +58,15 @@ export function DashboardScreen() {
       const key = (h.created_at ?? '').slice(0, 7);
       if (key) map.set(key, (map.get(key) ?? 0) + 1);
     });
-    return Array.from(map.entries())
-      .sort()
-      .map(([mes, total]) => ({ mes, total }));
+    return Array.from(map.entries()).sort().map(([mes, total]) => ({ mes, total }));
   }, [history]);
 
   const porEstado = useMemo(
-    () => [
-      { name: 'Completadas', value: completadas.length },
-      { name: 'En curso', value: history.length - completadas.length },
-    ],
+    () =>
+      [
+        { name: 'Completadas', value: completadas.length },
+        { name: 'En curso', value: history.length - completadas.length },
+      ].filter((d) => d.value > 0),
     [history, completadas.length],
   );
 
@@ -61,92 +76,129 @@ export function DashboardScreen() {
 
   return (
     <div className="max-w-5xl w-full mx-auto p-6 flex flex-col gap-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b-2 border-ink pb-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="font-mono font-bold text-3xl text-fg uppercase">Mi Dashboard</h1>
-          <p className="font-mono text-sm text-muted">Resumen de tus entrevistas de simulación.</p>
+          <h1 className="font-mono font-bold text-4xl text-fg uppercase leading-none">
+            Mi Dashboard
+          </h1>
+          <div className="h-1.5 w-24 bg-naranja border-2 border-ink mt-2" />
+          <p className="font-mono text-sm text-muted mt-3">
+            Resumen de tus entrevistas de simulación.
+          </p>
         </div>
-        <Button variante="primario" onClick={() => navigate('/setup')}>NUEVA SIMULACIÓN</Button>
+        <Button variante="primario" onClick={() => navigate('/setup')}>
+          <span className="flex items-center gap-2">
+            <Plus size={18} strokeWidth={3} /> NUEVA SIMULACIÓN
+          </span>
+        </Button>
       </div>
 
-      {error && <div className="p-3 border-2 border-ink bg-rojo text-ink font-mono font-bold">{error}</div>}
+      {error && (
+        <div className="p-3 border-2 border-ink bg-rojo text-ink font-mono font-bold">{error}</div>
+      )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="text-center p-4">
-          <h3 className="font-mono text-xs text-muted font-bold uppercase mb-2">Simulaciones</h3>
-          <p className="font-mono text-3xl font-bold text-fg">{history.length}</p>
-        </Card>
-        <Card className="text-center p-4">
-          <h3 className="font-mono text-xs text-muted font-bold uppercase mb-2">Promedio</h3>
-          <p className="font-mono text-3xl font-bold text-verde">{averageScore}</p>
-        </Card>
-        <Card className="text-center p-4">
-          <h3 className="font-mono text-xs text-muted font-bold uppercase mb-2">Mejor Puntaje</h3>
-          <p className="font-mono text-3xl font-bold text-lila">{bestScore}</p>
-        </Card>
-        <Card className="text-center p-4">
-          <h3 className="font-mono text-xs text-muted font-bold uppercase mb-2">Completadas</h3>
-          <p className="font-mono text-3xl font-bold text-naranja">{completadas.length}</p>
-        </Card>
+        <StatCard label="Simulaciones" value={history.length} icon={Layers} tono="naranja" />
+        <StatCard label="Promedio" value={averageScore} icon={TrendingUp} tono="verde" />
+        <StatCard label="Mejor puntaje" value={bestScore} icon={Trophy} tono="lila" />
+        <StatCard label="Completadas" value={completadas.length} icon={CheckCircle2} tono="ink" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <h3 className="font-mono font-bold text-sm text-fg uppercase mb-4">Entrevistas por mes</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={porMes}>
-                <XAxis dataKey="mes" stroke="#6e6152" fontSize={11} />
-                <YAxis stroke="#6e6152" fontSize={11} allowDecimals={false} />
-                <Tooltip />
-                <Bar dataKey="total" fill="#e8622c" />
-              </BarChart>
-            </ResponsiveContainer>
+        <Card className="p-0 overflow-hidden lift">
+          <div className="flex items-center gap-2 bg-surface2 border-b-[3px] border-ink px-4 py-3">
+            <BarChart3 size={18} strokeWidth={2.5} className="text-fg" />
+            <h3 className="font-mono font-bold text-sm text-fg uppercase">Entrevistas por mes</h3>
+          </div>
+          <div className="h-64 p-3">
+            {porMes.length === 0 ? (
+              <EmptyState
+                icon={Inbox}
+                titulo="Sin datos aún"
+                detalle="Cuando completes simulaciones, aquí verás tu actividad por mes."
+              />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={porMes}>
+                  <CartesianGrid strokeDasharray="4 4" stroke={EJE} opacity={0.2} vertical={false} />
+                  <XAxis dataKey="mes" stroke={EJE} fontSize={11} tickLine={false} />
+                  <YAxis stroke={EJE} fontSize={11} allowDecimals={false} tickLine={false} />
+                  <Tooltip contentStyle={TOOLTIP} />
+                  <Bar dataKey="total" fill="#e8622c" stroke={INK} strokeWidth={2} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </Card>
 
-        <Card>
-          <h3 className="font-mono font-bold text-sm text-fg uppercase mb-4">Entrevistas por estado</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={porEstado} dataKey="value" nameKey="name" outerRadius={90} label>
-                  {porEstado.map((_, i) => (
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Legend />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+        <Card className="p-0 overflow-hidden lift">
+          <div className="flex items-center gap-2 bg-surface2 border-b-[3px] border-ink px-4 py-3">
+            <PieIcon size={18} strokeWidth={2.5} className="text-fg" />
+            <h3 className="font-mono font-bold text-sm text-fg uppercase">Entrevistas por estado</h3>
+          </div>
+          <div className="h-64 p-3">
+            {porEstado.length === 0 ? (
+              <EmptyState
+                icon={Inbox}
+                titulo="Sin entrevistas"
+                detalle="Inicia tu primera simulación para ver la distribución por estado."
+              />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={porEstado} dataKey="value" nameKey="name" outerRadius={85} label>
+                    {porEstado.map((_, i) => (
+                      <Cell key={i} fill={COLORS[i % COLORS.length]} stroke={INK} strokeWidth={2} />
+                    ))}
+                  </Pie>
+                  <Legend />
+                  <Tooltip contentStyle={TOOLTIP} />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </Card>
       </div>
 
       <div>
-        <h2 className="font-mono font-bold text-xl text-fg uppercase mb-4">Actividad Reciente</h2>
+        <div className="flex items-center gap-2 mb-4">
+          <History size={22} strokeWidth={2.5} className="text-fg" />
+          <h2 className="font-mono font-bold text-2xl text-fg uppercase">Actividad reciente</h2>
+        </div>
         <Card className="p-0 overflow-hidden">
           {history.length === 0 ? (
-            <div className="p-6 text-center font-mono text-muted">No hay simulaciones recientes.</div>
+            <EmptyState
+              icon={Inbox}
+              titulo="No hay simulaciones recientes"
+              detalle="Pulsa «Nueva simulación» para practicar tu primera entrevista con la IA."
+            />
           ) : (
             <div className="flex flex-col">
               {history.map((item, index) => (
                 <button
                   key={item._id}
                   onClick={() => openInterview(item)}
-                  className={`flex flex-col md:flex-row items-start md:items-center justify-between p-4 text-left hover:bg-surface2 transition-colors ${index !== history.length - 1 ? 'border-b-2 border-ink' : ''}`}
+                  className={`group flex flex-col md:flex-row items-start md:items-center justify-between gap-3 p-4 text-left hover:bg-surface2 transition-colors ${index !== history.length - 1 ? 'border-b-2 border-ink' : ''}`}
                 >
-                  <div className="flex flex-col mb-2 md:mb-0">
-                    <span className="font-mono font-bold text-fg text-lg">{item.config.target_role}</span>
-                    <span className="font-mono text-xs text-muted">{item.created_at?.slice(0, 10) ?? '—'}</span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 shrink-0 flex items-center justify-center border-2 border-ink bg-naranja font-mono font-bold text-ink">
+                      {item.config.target_role.slice(0, 1).toUpperCase()}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-mono font-bold text-fg">{item.config.target_role}</span>
+                      <span className="font-mono text-xs text-muted">
+                        {item.created_at?.slice(0, 10) ?? '—'} · {item.config.seniority}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <Chip tono={item.status === 'completed' ? 'verde' : 'lila'}>
                       {item.status === 'completed' ? 'COMPLETADA' : 'EN CURSO'}
                     </Chip>
-                    <div className="font-mono font-bold text-lg text-fg w-12 text-right">
+                    <span className="font-mono font-bold text-2xl text-fg w-12 text-right">
                       {item.evaluation?.score ?? '—'}
-                    </div>
+                    </span>
+                    <ChevronRight size={18} className="text-muted group-hover:text-naranja transition-colors" />
                   </div>
                 </button>
               ))}

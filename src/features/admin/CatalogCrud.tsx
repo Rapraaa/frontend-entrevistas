@@ -2,11 +2,15 @@ import { useState, useEffect, useCallback, type FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import {
+  Plus, Search, Pencil, Trash2, Inbox, ChevronLeft, ChevronRight, ArrowUpDown,
+} from 'lucide-react';
 import { Card } from '../../ui/Card';
 import { Button } from '../../ui/Button';
 import { Input } from '../../ui/Input';
 import { Chip } from '../../ui/Chip';
 import { Modal } from '../../ui/Modal';
+import { EmptyState } from '../../ui/EmptyState';
 import { useAuth } from '../../auth/AuthContext';
 import { useNotify } from '../../contexts/NotificationContext';
 import { ApiError } from '../../lib/api';
@@ -131,13 +135,18 @@ export function CatalogCrud({ slug, label }: Props) {
 
   return (
     <div className="max-w-5xl w-full mx-auto p-6 flex flex-col gap-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b-2 border-ink pb-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="font-mono font-bold text-3xl text-fg uppercase">{label}</h1>
-          <p className="font-mono text-sm text-muted">Gestión del catálogo.</p>
+          <h1 className="font-mono font-bold text-4xl text-fg uppercase leading-none">{label}</h1>
+          <div className="h-1.5 w-24 bg-naranja border-2 border-ink mt-2" />
+          <p className="font-mono text-sm text-muted mt-3">Gestión del catálogo.</p>
         </div>
         {isAdmin && (
-          <Button variante="primario" onClick={openCreate}>NUEVO</Button>
+          <Button variante="primario" onClick={openCreate}>
+            <span className="flex items-center gap-2">
+              <Plus size={18} strokeWidth={3} /> NUEVO
+            </span>
+          </Button>
         )}
       </div>
 
@@ -150,13 +159,17 @@ export function CatalogCrud({ slug, label }: Props) {
             onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
-        <Button type="submit" variante="secundario">BUSCAR</Button>
+        <Button type="submit" variante="secundario">
+          <span className="flex items-center gap-2"><Search size={16} strokeWidth={3} /> BUSCAR</span>
+        </Button>
         <Button
           type="button"
           variante="secundario"
           onClick={() => setOrder((o) => (o === 'ASC' ? 'DESC' : 'ASC'))}
         >
-          NOMBRE {order === 'ASC' ? '↑' : '↓'}
+          <span className="flex items-center gap-2">
+            <ArrowUpDown size={16} strokeWidth={3} /> {order === 'ASC' ? 'A-Z' : 'Z-A'}
+          </span>
         </Button>
       </form>
 
@@ -164,21 +177,29 @@ export function CatalogCrud({ slug, label }: Props) {
         <div className="overflow-x-auto">
           <table className="w-full font-mono text-sm">
             <thead>
-              <tr className="bg-surface2 border-b-2 border-ink text-left">
-                <th className="p-3 font-bold text-fg">Nombre</th>
-                <th className="p-3 font-bold text-fg">Descripción</th>
-                <th className="p-3 font-bold text-fg">Estado</th>
-                {isAdmin && <th className="p-3 font-bold text-fg text-right">Acciones</th>}
+              <tr className="bg-ink text-papel border-b-[3px] border-ink text-left uppercase text-[11px] tracking-widest">
+                <th className="p-3 font-bold">Nombre</th>
+                <th className="p-3 font-bold">Descripción</th>
+                <th className="p-3 font-bold">Estado</th>
+                {isAdmin && <th className="p-3 font-bold text-right">Acciones</th>}
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr><td colSpan={4} className="p-6 text-center text-muted">Cargando_</td></tr>
               ) : items.length === 0 ? (
-                <tr><td colSpan={4} className="p-6 text-center text-muted">Sin registros.</td></tr>
+                <tr>
+                  <td colSpan={4}>
+                    <EmptyState
+                      icon={Inbox}
+                      titulo="Sin registros"
+                      detalle="No hay elementos en este catálogo con los filtros actuales."
+                    />
+                  </td>
+                </tr>
               ) : (
                 items.map((item) => (
-                  <tr key={item.id} className="border-b border-ink/20">
+                  <tr key={item.id} className="border-b border-fg/20">
                     <td className="p-3 text-fg font-bold">{item.name}</td>
                     <td className="p-3 text-muted">{item.description || '—'}</td>
                     <td className="p-3">
@@ -189,8 +210,20 @@ export function CatalogCrud({ slug, label }: Props) {
                     {isAdmin && (
                       <td className="p-3">
                         <div className="flex gap-2 justify-end">
-                          <button onClick={() => openEdit(item)} className="font-bold text-naranja underline">Editar</button>
-                          <button onClick={() => setDeleting(item)} className="font-bold text-rojo underline">Eliminar</button>
+                          <button
+                            onClick={() => openEdit(item)}
+                            title="Editar"
+                            className="flex items-center gap-1 border-2 border-ink bg-lila text-ink px-2 py-1 font-bold hover:shadow-brutal transition-shadow"
+                          >
+                            <Pencil size={14} strokeWidth={3} /> Editar
+                          </button>
+                          <button
+                            onClick={() => setDeleting(item)}
+                            title="Eliminar"
+                            className="flex items-center gap-1 border-2 border-ink bg-rojo text-ink px-2 py-1 font-bold hover:shadow-brutal transition-shadow"
+                          >
+                            <Trash2 size={14} strokeWidth={3} /> Eliminar
+                          </button>
                         </div>
                       </td>
                     )}
@@ -208,15 +241,17 @@ export function CatalogCrud({ slug, label }: Props) {
           onClick={() => setPage((p) => Math.max(1, p - 1))}
           disabled={page <= 1}
         >
-          ← ANTERIOR
+          <span className="flex items-center gap-1"><ChevronLeft size={16} strokeWidth={3} /> ANTERIOR</span>
         </Button>
-        <span className="text-muted">Página {page} de {totalPages}</span>
+        <span className="text-muted">
+          Página <b className="text-fg">{page}</b> de <b className="text-fg">{totalPages}</b>
+        </span>
         <Button
           variante="secundario"
           onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
           disabled={page >= totalPages}
         >
-          SIGUIENTE →
+          <span className="flex items-center gap-1">SIGUIENTE <ChevronRight size={16} strokeWidth={3} /></span>
         </Button>
       </div>
 
