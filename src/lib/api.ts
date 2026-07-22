@@ -3,6 +3,8 @@ import axios from 'axios';
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000';
 const TOKEN_KEY = 'sim_token';
 
+export const API_BASE_URL = BASE_URL;
+
 export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
 }
@@ -39,6 +41,18 @@ http.interceptors.response.use(
   (error) => {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status ?? 0;
+      const url = error.config?.url ?? '';
+      const esLoginORegistro = url.includes('/auth/login') || url.includes('/auth/register');
+
+      // Sesión expirada o token inválido: limpiamos y mandamos a iniciar sesión.
+      // (No aplica al propio login/registro, donde un 401 significa credenciales malas.)
+      if (status === 401 && !esLoginORegistro) {
+        clearToken();
+        if (window.location.pathname !== '/login') {
+          window.location.assign('/login');
+        }
+      }
+
       const data = error.response?.data as { message?: string | string[] } | undefined;
       const message = Array.isArray(data?.message)
         ? data.message.join(', ')
