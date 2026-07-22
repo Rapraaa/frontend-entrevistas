@@ -4,6 +4,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   type ReactNode,
 } from 'react';
 import { http, getToken, setToken, clearToken } from '../lib/api';
@@ -66,44 +67,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refreshProfile();
   }, [refreshProfile]);
 
-  const applyToken = (token: string) => {
+  const applyToken = useCallback((token: string) => {
     setToken(token);
-    setUser(decodeToken(token));
-  };
+    setUser((anterior) => {
+      const siguiente = decodeToken(token);
+      if (anterior?.id === siguiente?.id && anterior?.role === siguiente?.role) {
+        return anterior;
+      }
+      return siguiente;
+    });
+  }, []);
 
-  const login = async (email: string, password: string) => {
-    const { data } = await http.post<AuthResponse>('/auth/login', { email, password });
-    applyToken(data.access_token);
-  };
+  const login = useCallback(
+    async (email: string, password: string) => {
+      const { data } = await http.post<AuthResponse>('/auth/login', { email, password });
+      applyToken(data.access_token);
+    },
+    [applyToken],
+  );
 
-  const register = async (input: RegisterInput) => {
-    const { data } = await http.post<AuthResponse>('/auth/register', input);
-    applyToken(data.access_token);
-  };
+  const register = useCallback(
+    async (input: RegisterInput) => {
+      const { data } = await http.post<AuthResponse>('/auth/register', input);
+      applyToken(data.access_token);
+    },
+    [applyToken],
+  );
 
-  const logout = () => {
+  const logout = useCallback(() => {
     clearToken();
     setUser(null);
     setProfile(null);
-  };
+  }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        isAuthenticated: !!user,
-        user,
-        profile,
-        isAdmin: user?.role === 'admin',
-        login,
-        register,
-        loginWithToken: applyToken,
-        refreshProfile,
-        logout,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      isAuthenticated: !!user,
+      user,
+      profile,
+      isAdmin: user?.role === 'admin',
+      login,
+      register,
+      loginWithToken: applyToken,
+      refreshProfile,
+      logout,
+    }),
+    [user, profile, login, register, applyToken, refreshProfile, logout],
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth(): AuthContextValue {

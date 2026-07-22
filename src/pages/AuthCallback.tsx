@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 
@@ -6,8 +6,12 @@ export function AuthCallback() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { loginWithToken } = useAuth();
+  const yaProcesado = useRef(false);
 
   useEffect(() => {
+    if (yaProcesado.current) return;
+    yaProcesado.current = true;
+
     const token = params.get('token');
     if (token) {
       loginWithToken(token);
