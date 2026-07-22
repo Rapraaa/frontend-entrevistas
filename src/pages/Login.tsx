@@ -5,7 +5,9 @@ import { Card } from '../ui/Card';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { useAuth } from '../auth/AuthContext';
-import { ApiError } from '../lib/api';
+import { ApiError, API_BASE_URL } from '../lib/api';
+import { ThemeToggle } from '../ui/ThemeToggle';
+import { Logo } from '../ui/Logo';
 
 export function Login() {
   const navigate = useNavigate();
@@ -15,12 +17,6 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const toggleTheme = () => {
-    const html = document.documentElement;
-    const isDark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -37,9 +33,9 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-base">
+    <div className="min-h-screen bg-base patron-puntos">
       <Navbar>
-        <button onClick={toggleTheme} className="px-3 border-2 border-ink bg-surface2"> ☀︎ </button>
+        <ThemeToggle />
         <Link to="/login" className="font-mono font-bold text-fg">INICIAR SESIÓN</Link>
         <Button variante="primario" onClick={() => navigate('/registro')}>REGISTRARSE</Button>
       </Navbar>
@@ -47,7 +43,7 @@ export function Login() {
       <main className="flex items-center justify-center min-h-[calc(100vh-80px)] p-6">
         <Card className="w-full max-w-sm border-[3px] border-ink">
           <div className="flex justify-center mb-6">
-            <div className="bg-naranja p-3 border-2 border-ink font-mono font-bold text-ink"> _^ </div>
+            <Logo />
           </div>
 
           <div className="text-center mb-6">
@@ -83,6 +79,21 @@ export function Login() {
               {loading ? 'Entrando...' : 'Iniciar Sesión'}
             </Button>
           </form>
+
+          <div className="mt-4 flex items-center gap-2">
+            <div className="flex-1 h-0.5 bg-fg/20" />
+            <span className="font-mono text-xs text-muted">O</span>
+            <div className="flex-1 h-0.5 bg-fg/20" />
+          </div>
+          <div className="mt-4">
+            <Button
+              variante="secundario"
+              type="button"
+              onClick={() => { window.location.href = `${API_BASE_URL}/auth/google`; }}
+            >
+              Continuar con Google
+            </Button>
+          </div>
 
           <p className="mt-6 text-center text-sm font-mono text-fg">
             ¿No tienes cuenta? <Link to="/registro" className="text-naranja font-bold">Registrate gratis</Link>
