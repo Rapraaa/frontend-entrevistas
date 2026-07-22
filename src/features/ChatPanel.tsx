@@ -18,7 +18,6 @@ export function ChatPanel({ messages, config, value, onChange, onSend, sending }
   const aiCount = messages.filter((m) => m.sender === 'ai').length;
   const finalRef = useRef<HTMLDivElement>(null);
 
-  // Al llegar un mensaje nuevo (o mientras la IA responde) bajamos al final.
   useEffect(() => {
     finalRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [messages.length, sending]);
