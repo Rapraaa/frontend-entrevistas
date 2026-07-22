@@ -28,7 +28,6 @@ export function InterviewScreen() {
     getInterview(id)
       .then((datos) => {
         setInterview(datos);
-        // El editor abre en el lenguaje de las tecnologías elegidas, no siempre en JS.
         setLenguajeId(detectarLenguaje(datos.config.technologies).id);
       })
       .catch((err) =>
@@ -44,7 +43,6 @@ export function InterviewScreen() {
     setSending(true);
     setError('');
     try {
-      // Le decimos a la IA en qué lenguaje viene el código.
       const finalContent = content || `Envié mi solución en ${lenguaje.nombre}.`;
       const updated = await sendMessage(id, finalContent, snippet || undefined);
       setInterview(updated);
