@@ -145,7 +145,7 @@ export function Home() {
               />
             </h1>
 
-            <p className="mt-6 max-w-lg font-mono text-base leading-relaxed text-muted sm:text-lg">
+            <p className="mt-6 max-w-lg font-mono text-[1rem] leading-relaxed text-muted sm:text-lg">
               Una IA te entrevista como lo haría un reclutador técnico. Respondes, escribes código,
               y al terminar recibes un reporte con tu puntaje y qué mejorar.
             </p>
@@ -154,7 +154,7 @@ export function Home() {
               <Button
                 variante="primario"
                 onClick={() => navigate(destino)}
-                className="text-base sm:px-6"
+                className="text-[1rem] sm:px-6"
               >
                 <span className="flex items-center justify-center gap-2">
                   EMPEZAR GRATIS
@@ -220,7 +220,7 @@ export function Home() {
       <section className="border-b-[3px] border-trazo bg-lila px-5 py-16 sm:px-6 sm:py-20">
         <div className="container mx-auto">
           <Revelar>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-ink/70">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-ink">
               Lo que incluye
             </p>
             <h2 className="mt-3 max-w-2xl font-mono text-3xl font-bold uppercase leading-tight text-ink sm:text-5xl">
@@ -240,7 +240,7 @@ export function Home() {
                   <h3 className="font-mono text-lg font-bold uppercase leading-tight text-ink">
                     {c.titulo}
                   </h3>
-                  <p className="font-mono text-sm leading-relaxed text-ink/80">{c.detalle}</p>
+                  <p className="font-mono text-sm leading-relaxed text-ink">{c.detalle}</p>
                 </article>
               </Revelar>
             ))}
@@ -289,13 +289,13 @@ export function Home() {
               <br />
               ya no será la primera
             </h2>
-            <p className="mx-auto mt-5 max-w-xl font-mono text-sm leading-relaxed text-ink/80 sm:text-base">
+            <p className="mx-auto mt-5 max-w-xl font-mono text-sm leading-relaxed text-ink sm:text-[1rem]">
               Practica hoy y llega con la respuesta ya dicha en voz alta.
             </p>
             <div className="mt-8 flex justify-center">
               <Link
                 to={destino}
-                className="inline-flex min-h-[44px] items-center gap-2 border-[3px] border-ink bg-surface px-7 py-4 font-mono text-base font-bold uppercase text-fg shadow-brutal presiona"
+                className="inline-flex min-h-[44px] items-center gap-2 border-[3px] border-ink bg-surface px-7 py-4 font-mono text-[1rem] font-bold uppercase text-fg shadow-brutal presiona"
               >
                 Crear mi cuenta
                 <ArrowRight size={18} strokeWidth={3} aria-hidden="true" />

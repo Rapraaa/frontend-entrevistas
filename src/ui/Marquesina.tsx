@@ -16,7 +16,7 @@ export function Marquesina({ items, fondo = 'bg-naranja', className = '' }: Prop
         {duplicados.map((item, i) => (
           <span
             key={`${item}-${i}`}
-            className="flex items-center gap-6 px-6 font-mono font-bold text-ink uppercase text-sm sm:text-base whitespace-nowrap"
+            className="flex items-center gap-6 px-6 font-mono font-bold text-ink uppercase text-sm sm:text-[1rem] whitespace-nowrap"
           >
             {item}
             <span className="text-ink/50">◆</span>

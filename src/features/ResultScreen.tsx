@@ -70,13 +70,13 @@ export function ResultScreen() {
                 }`}
               >
                 <Award size={26} strokeWidth={2.5} className="text-ink mb-2" aria-hidden="true" />
-                <h2 className="font-mono text-[11px] text-ink/70 font-bold uppercase tracking-widest mb-2">
+                <h2 className="font-mono text-[11px] text-ink/80 font-bold uppercase tracking-widest mb-2">
                   Puntaje final
                 </h2>
                 <span className="font-mono text-7xl font-bold text-ink leading-none tabular-nums">
                   {score}
                 </span>
-                <span className="font-mono text-[11px] text-ink/70 mt-3 font-bold uppercase tracking-widest">
+                <span className="font-mono text-[11px] text-ink/80 mt-3 font-bold uppercase tracking-widest">
                   sobre 100
                 </span>
                 <p className="font-mono text-xs text-ink text-center mt-4 border-t-2 border-ink/30 pt-3">
