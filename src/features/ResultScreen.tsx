@@ -10,6 +10,13 @@ import { getInterview } from '../lib/interviews';
 import { ApiError } from '../lib/api';
 import type { Interview } from '../lib/types';
 
+function mensajeDeApoyo(score: number): string {
+  if (score >= 80) return 'Gran nivel. Estás listo para una entrevista real.';
+  if (score >= 60) return 'Buena base. Repasa los puntos a mejorar y vuelve a intentarlo.';
+  if (score >= 40) return 'Esto es práctica: aquí es exactamente donde conviene fallar. Revisa lo que sigue.';
+  return 'La primera siempre es la más dura. Cada intento suma; sigue practicando.';
+}
+
 export function ResultScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -39,7 +46,7 @@ export function ResultScreen() {
           <h1 className="font-mono font-bold text-4xl text-fg uppercase leading-none">
             Reporte de simulación
           </h1>
-          <div className="h-1.5 w-24 bg-naranja border-2 border-ink mt-2" />
+          <div className="h-1.5 w-24 bg-naranja border-2 border-trazo mt-2" />
           {interview && (
             <p className="font-mono text-sm text-muted mt-3">
               {interview.config.target_role} · {interview.config.seniority} ·{' '}
@@ -48,7 +55,7 @@ export function ResultScreen() {
           )}
         </div>
 
-        {error && <div className="p-3 border-2 border-ink bg-rojo text-ink font-mono font-bold">{error}</div>}
+        {error && <div className="p-3 border-2 border-trazo bg-rojo text-ink font-mono font-bold">{error}</div>}
 
         {!interview && !error && (
           <p className="font-mono text-muted">Cargando reporte_</p>
@@ -59,22 +66,27 @@ export function ResultScreen() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card
                 className={`md:col-span-1 flex flex-col items-center justify-center p-8 lift ${
-                  score >= 80 ? 'bg-verde' : score >= 60 ? 'bg-naranja' : 'bg-rojo'
+                  score >= 80 ? 'bg-verde' : score >= 60 ? 'bg-naranja' : 'bg-amarillo'
                 }`}
               >
-                <Award size={26} strokeWidth={2.5} className="text-ink mb-2" />
-                <h3 className="font-mono text-[11px] text-ink/70 font-bold uppercase tracking-widest mb-2">
+                <Award size={26} strokeWidth={2.5} className="text-ink mb-2" aria-hidden="true" />
+                <h2 className="font-mono text-[11px] text-ink/70 font-bold uppercase tracking-widest mb-2">
                   Puntaje final
-                </h3>
-                <span className="font-mono text-7xl font-bold text-ink leading-none">{score}</span>
+                </h2>
+                <span className="font-mono text-7xl font-bold text-ink leading-none tabular-nums">
+                  {score}
+                </span>
                 <span className="font-mono text-[11px] text-ink/70 mt-3 font-bold uppercase tracking-widest">
                   sobre 100
                 </span>
+                <p className="font-mono text-xs text-ink text-center mt-4 border-t-2 border-ink/30 pt-3">
+                  {mensajeDeApoyo(score)}
+                </p>
               </Card>
 
               <div className="md:col-span-2 flex flex-col gap-6">
                 <Card className="lift">
-                  <div className="flex items-center gap-2 mb-3 border-b-2 border-ink pb-2">
+                  <div className="flex items-center gap-2 mb-3 border-b-2 border-trazo pb-2">
                     <Sparkles size={18} strokeWidth={2.5} className="text-fg" />
                     <h3 className="font-mono text-sm text-fg font-bold uppercase">
                       Feedback general de la IA
@@ -89,7 +101,7 @@ export function ResultScreen() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="p-0 overflow-hidden lift">
-                <div className="flex items-center gap-2 bg-verde border-b-[3px] border-ink px-4 py-3">
+                <div className="flex items-center gap-2 bg-verde border-b-[3px] border-trazo px-4 py-3">
                   <ThumbsUp size={18} strokeWidth={2.5} className="text-ink" />
                   <h3 className="font-mono text-sm text-ink font-bold uppercase">Fortalezas</h3>
                 </div>
@@ -106,7 +118,7 @@ export function ResultScreen() {
               </Card>
 
               <Card className="p-0 overflow-hidden lift">
-                <div className="flex items-center gap-2 bg-rojo border-b-[3px] border-ink px-4 py-3">
+                <div className="flex items-center gap-2 bg-rojo border-b-[3px] border-trazo px-4 py-3">
                   <AlertTriangle size={18} strokeWidth={2.5} className="text-ink" />
                   <h3 className="font-mono text-sm text-ink font-bold uppercase">A mejorar</h3>
                 </div>
@@ -123,7 +135,7 @@ export function ResultScreen() {
               </Card>
 
               <Card className="p-0 overflow-hidden lift">
-                <div className="flex items-center gap-2 bg-lila border-b-[3px] border-ink px-4 py-3">
+                <div className="flex items-center gap-2 bg-lila border-b-[3px] border-trazo px-4 py-3">
                   <Lightbulb size={18} strokeWidth={2.5} className="text-ink" />
                   <h3 className="font-mono text-sm text-ink font-bold uppercase">Tips de mejora</h3>
                 </div>

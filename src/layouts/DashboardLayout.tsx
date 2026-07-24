@@ -37,7 +37,7 @@ export function DashboardLayout() {
                 type="button"
                 onClick={() => setMenuAbierto(true)}
                 aria-label="Abrir menú"
-                className="md:hidden flex items-center justify-center w-9 h-9 border-2 border-ink bg-surface2 text-fg"
+                className="md:hidden flex items-center justify-center w-9 h-9 border-2 border-trazo bg-surface2 text-fg"
               >
                 <Menu size={18} strokeWidth={3} />
               </button>

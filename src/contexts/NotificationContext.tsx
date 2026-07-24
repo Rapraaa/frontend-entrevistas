@@ -33,11 +33,16 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   return (
     <NotificationContext.Provider value={{ notify }}>
       {children}
-      <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 max-w-xs">
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="false"
+        className="fixed top-4 right-4 z-[100] flex flex-col gap-2 max-w-xs"
+      >
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`border-2 border-ink shadow-brutal px-4 py-3 font-mono text-sm font-bold ${estilos[t.tipo]}`}
+            className={`aparece border-2 border-trazo shadow-brutal px-4 py-3 font-mono text-sm font-bold ${estilos[t.tipo]}`}
           >
             {t.mensaje}
           </div>

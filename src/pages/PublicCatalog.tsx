@@ -67,7 +67,7 @@ export function PublicCatalog() {
       </Navbar>
 
       <main className="max-w-5xl mx-auto p-6 flex flex-col gap-6">
-        <div className="border-b-2 border-ink pb-4">
+        <div className="border-b-2 border-trazo pb-4">
           <h1 className="font-mono font-bold text-3xl text-fg uppercase">{label}</h1>
           <p className="font-mono text-sm text-muted">Información pública del sistema.</p>
         </div>
@@ -75,7 +75,7 @@ export function PublicCatalog() {
         <div className="flex flex-wrap gap-2">
           {CATALOGS.map((c) => (
             <Link key={c.slug} to={`/publico/${c.slug}`}>
-              <Chip tono={c.slug === slug ? 'lila' : undefined}>{c.label}</Chip>
+              <Chip tono={c.slug === slug ? 'lila' : 'neutro'} className={c.slug === slug ? 'shadow-brutal' : ''}>{c.label}</Chip>
             </Link>
           ))}
         </div>
@@ -90,7 +90,7 @@ export function PublicCatalog() {
           </Button>
         </form>
 
-        {error && <div className="p-3 border-2 border-ink bg-rojo text-ink font-mono font-bold">{error}</div>}
+        {error && <div className="p-3 border-2 border-trazo bg-rojo text-ink font-mono font-bold">{error}</div>}
 
         {loading ? (
           <p className="font-mono text-muted">Cargando_</p>
@@ -99,7 +99,7 @@ export function PublicCatalog() {
             {items.map((item) => (
               <Link key={item.id} to={`/publico/${slug}/${item.id}`}>
                 <Card className="h-full hover:bg-surface2 transition-colors">
-                  <h3 className="font-mono font-bold text-lg text-fg mb-2">{item.name}</h3>
+                  <h2 className="font-mono font-bold text-lg text-fg mb-2">{item.name}</h2>
                   <p className="font-mono text-sm text-muted line-clamp-3">{item.description || 'Sin descripción.'}</p>
                 </Card>
               </Link>

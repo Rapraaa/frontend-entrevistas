@@ -18,7 +18,7 @@ export function NotFound() {
 
       <main className="flex-1 flex items-center justify-center p-6">
         <Card className="w-full max-w-lg flex flex-col items-center text-center gap-5 p-10">
-          <div className="border-[3px] border-ink bg-naranja shadow-brutal p-5">
+          <div className="border-[3px] border-trazo bg-naranja shadow-brutal p-5">
             <Compass size={40} strokeWidth={2.5} className="text-ink" />
           </div>
           <div>

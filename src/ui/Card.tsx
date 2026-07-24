@@ -13,7 +13,7 @@ export function Card({ children, className = '', ...props }: Props) {
   const padding = definePadding(className) ? '' : 'p-6';
   return (
     <div
-      className={`bg-surface border-[3px] border-ink shadow-brutal ${padding} ${className}`}
+      className={`bg-surface border-[3px] border-trazo shadow-brutal ${padding} ${className}`}
       {...props}
     >
       {children}

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Flag } from 'lucide-react';
+import { Flag, Save } from 'lucide-react';
 import { Chip } from '../ui/Chip';
+import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { ChatPanel } from './ChatPanel';
 import { EditorPanel } from './EditorPanel';
@@ -22,6 +23,7 @@ export function InterviewScreen() {
   const [sending, setSending] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [error, setError] = useState('');
+  const [confirmando, setConfirmando] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -55,8 +57,12 @@ export function InterviewScreen() {
     }
   };
 
+  const respuestasDadas =
+    interview?.chat_history.filter((m) => m.sender === 'user').length ?? 0;
+
   const handleFinish = async () => {
     if (!id) return;
+    setConfirmando(false);
     setFinishing(true);
     setError('');
     try {
@@ -77,16 +83,56 @@ export function InterviewScreen() {
             MODO: {interview?.config.interview_type?.toUpperCase() ?? 'TÉCNICA'}
           </Chip>
         </div>
-        <Button variante="secundario" onClick={handleFinish} disabled={finishing || !interview}>
-          <span className="flex items-center gap-2">
-            <Flag size={16} strokeWidth={3} /> {finishing ? 'FINALIZANDO...' : 'FINALIZAR'}
-          </span>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variante="secundario"
+            onClick={() => navigate('/dashboard')}
+            disabled={finishing}
+          >
+            <span className="flex items-center gap-2">
+              <Save size={16} strokeWidth={3} /> GUARDAR Y SALIR
+            </span>
+          </Button>
+          <Button
+            variante="peligro"
+            onClick={() => setConfirmando(true)}
+            disabled={finishing || !interview}
+          >
+            <span className="flex items-center gap-2">
+              <Flag size={16} strokeWidth={3} /> {finishing ? 'FINALIZANDO...' : 'FINALIZAR'}
+            </span>
+          </Button>
+        </div>
       </div>
 
       {error && (
-        <div className="p-3 border-2 border-ink bg-rojo text-ink font-mono font-bold">{error}</div>
+        <div role="alert" className="p-3 border-2 border-trazo bg-rojo text-ink font-mono font-bold">
+          {error}
+        </div>
       )}
+
+      <Modal
+        isOpen={confirmando}
+        onClose={() => setConfirmando(false)}
+        title="¿Terminar la entrevista?"
+      >
+        <p className="font-mono text-sm text-fg mb-2">
+          Se evaluarán tus {respuestasDadas} {respuestasDadas === 1 ? 'respuesta' : 'respuestas'} y
+          se generará el reporte final.
+        </p>
+        <p className="font-mono text-sm text-muted mb-6">
+          No podrás seguir respondiendo en esta entrevista. Si solo quieres continuar más tarde, usa
+          «Guardar y salir».
+        </p>
+        <div className="flex flex-wrap justify-end gap-3">
+          <Button variante="secundario" onClick={() => setConfirmando(false)}>
+            Seguir practicando
+          </Button>
+          <Button variante="peligro" onClick={handleFinish} disabled={finishing}>
+            {finishing ? 'Finalizando...' : 'Sí, finalizar'}
+          </Button>
+        </div>
+      </Modal>
 
       {interview ? (
         <div className="flex-1 flex gap-6 min-h-0 overflow-hidden">

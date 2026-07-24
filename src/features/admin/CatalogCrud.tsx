@@ -138,7 +138,7 @@ export function CatalogCrud({ slug, label }: Props) {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="font-mono font-bold text-4xl text-fg uppercase leading-none">{label}</h1>
-          <div className="h-1.5 w-24 bg-naranja border-2 border-ink mt-2" />
+          <div className="h-1.5 w-24 bg-naranja border-2 border-trazo mt-2" />
           <p className="font-mono text-sm text-muted mt-3">Gestión del catálogo.</p>
         </div>
         {isAdmin && (
@@ -177,7 +177,7 @@ export function CatalogCrud({ slug, label }: Props) {
         <div className="overflow-x-auto">
           <table className="w-full font-mono text-sm">
             <thead>
-              <tr className="bg-ink text-papel border-b-[3px] border-ink text-left uppercase text-[11px] tracking-widest">
+              <tr className="bg-ink text-papel border-b-[3px] border-trazo text-left uppercase text-[11px] tracking-widest">
                 <th className="p-3 font-bold">Nombre</th>
                 <th className="p-3 font-bold">Descripción</th>
                 <th className="p-3 font-bold">Estado</th>
@@ -213,14 +213,14 @@ export function CatalogCrud({ slug, label }: Props) {
                           <button
                             onClick={() => openEdit(item)}
                             title="Editar"
-                            className="flex items-center gap-1 border-2 border-ink bg-lila text-ink px-2 py-1 font-bold hover:shadow-brutal transition-shadow"
+                            className="flex items-center gap-1 border-2 border-trazo bg-lila text-ink px-3 min-h-[44px] font-bold presiona"
                           >
                             <Pencil size={14} strokeWidth={3} /> Editar
                           </button>
                           <button
                             onClick={() => setDeleting(item)}
                             title="Eliminar"
-                            className="flex items-center gap-1 border-2 border-ink bg-rojo text-ink px-2 py-1 font-bold hover:shadow-brutal transition-shadow"
+                            className="flex items-center gap-1 border-2 border-trazo bg-rojo text-ink px-3 min-h-[44px] font-bold presiona"
                           >
                             <Trash2 size={14} strokeWidth={3} /> Eliminar
                           </button>
@@ -260,7 +260,7 @@ export function CatalogCrud({ slug, label }: Props) {
           <Input label="Nombre" placeholder="Nombre del ítem" error={errors.name?.message} {...register('name')} />
           <Input label="Descripción" placeholder="Descripción (opcional)" {...register('description')} />
           <label className="flex items-center gap-2 font-mono text-sm text-fg">
-            <input type="checkbox" {...register('isActive')} className="w-4 h-4 border-2 border-ink" />
+            <input type="checkbox" {...register('isActive')} className="w-4 h-4 border-2 border-trazo" />
             Activo
           </label>
           <div className="flex justify-end gap-2">
@@ -276,7 +276,7 @@ export function CatalogCrud({ slug, label }: Props) {
         </p>
         <div className="flex justify-end gap-2">
           <Button variante="secundario" onClick={() => setDeleting(null)}>CANCELAR</Button>
-          <Button variante="primario" onClick={confirmDelete}>ELIMINAR</Button>
+          <Button variante="peligro" onClick={confirmDelete}>ELIMINAR</Button>
         </div>
       </Modal>
     </div>

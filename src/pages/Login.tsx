@@ -36,19 +36,24 @@ export function Login() {
     <div className="min-h-screen bg-base patron-puntos">
       <Navbar>
         <ThemeToggle />
-        <Link to="/login" className="font-mono font-bold text-fg">INICIAR SESIÓN</Link>
-        <Button variante="primario" onClick={() => navigate('/registro')}>REGISTRARSE</Button>
+        <Link
+          to="/registro"
+          className="hidden sm:inline font-mono font-bold text-fg px-2 py-3 hover:text-acento"
+        >
+          REGISTRARSE
+        </Link>
+        <Button variante="primario" onClick={() => navigate('/registro')}>CREAR CUENTA</Button>
       </Navbar>
 
-      <main className="flex items-center justify-center min-h-[calc(100vh-80px)] p-6">
-        <Card className="w-full max-w-sm border-[3px] border-ink">
+      <main className="flex items-center justify-center min-h-[calc(100vh-80px)] p-4 sm:p-6">
+        <Card className="w-full max-w-md border-[3px] border-trazo p-6">
           <div className="flex justify-center mb-6">
             <Logo />
           </div>
 
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold font-mono uppercase text-fg">Bienvenido de vuelta</h2>
-            <p className="text-naranja font-mono text-sm mt-1">Inicia sesión en tu cuenta</p>
+            <h1 className="text-2xl font-bold font-mono uppercase text-fg">Bienvenido de vuelta</h1>
+            <p className="text-acento font-mono text-sm mt-1">Inicia sesión en tu cuenta</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -56,6 +61,7 @@ export function Login() {
               label="Correo electrónico"
               type="email"
               placeholder="tu@email.com"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -64,18 +70,19 @@ export function Login() {
               label="Contraseña"
               type="password"
               placeholder="********"
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
 
             {error && (
-              <div className="p-3 border-2 border-ink bg-rojo text-ink font-mono text-sm font-bold">
+              <div role="alert" className="p-3 border-2 border-trazo bg-rojo text-ink font-mono text-sm font-bold">
                 {error}
               </div>
             )}
 
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Entrando...' : 'Iniciar Sesión'}
             </Button>
           </form>
@@ -89,6 +96,7 @@ export function Login() {
             <Button
               variante="secundario"
               type="button"
+              className="w-full"
               onClick={() => { window.location.href = `${API_BASE_URL}/auth/google`; }}
             >
               Continuar con Google
@@ -96,7 +104,7 @@ export function Login() {
           </div>
 
           <p className="mt-6 text-center text-sm font-mono text-fg">
-            ¿No tienes cuenta? <Link to="/registro" className="text-naranja font-bold">Registrate gratis</Link>
+            ¿No tienes cuenta? <Link to="/registro" className="inline-flex min-h-[44px] items-center text-acento font-bold underline underline-offset-4">Registrate gratis</Link>
           </p>
         </Card>
       </main>

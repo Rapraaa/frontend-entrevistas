@@ -41,13 +41,13 @@ export function PublicCatalogDetail() {
       </Navbar>
 
       <main className="max-w-2xl mx-auto p-6 flex flex-col gap-6">
-        <Link to={`/publico/${slug}`} className="font-mono text-sm text-naranja font-bold">← Volver a {label}</Link>
+        <Link to={`/publico/${slug}`} className="font-mono text-sm text-acento font-bold">← Volver a {label}</Link>
 
-        {error && <div className="p-3 border-2 border-ink bg-rojo text-ink font-mono font-bold">{error}</div>}
+        {error && <div className="p-3 border-2 border-trazo bg-rojo text-ink font-mono font-bold">{error}</div>}
 
         {item && (
           <Card className="flex flex-col gap-4">
-            <div className="flex items-center justify-between border-b-2 border-ink pb-3">
+            <div className="flex items-center justify-between border-b-2 border-trazo pb-3">
               <h1 className="font-mono font-bold text-2xl text-fg">{item.name}</h1>
               <Chip tono={item.isActive === false ? 'rojo' : 'verde'}>
                 {item.isActive === false ? 'INACTIVO' : 'ACTIVO'}

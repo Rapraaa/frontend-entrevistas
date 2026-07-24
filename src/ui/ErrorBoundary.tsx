@@ -25,8 +25,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
     return (
       <div className="min-h-screen bg-base patron-puntos flex items-center justify-center p-6">
-        <div className="w-full max-w-lg border-[3px] border-ink bg-surface shadow-brutal p-10 flex flex-col items-center text-center gap-5">
-          <div className="border-[3px] border-ink bg-naranja shadow-brutal p-5">
+        <div className="w-full max-w-lg border-[3px] border-trazo bg-surface shadow-brutal p-10 flex flex-col items-center text-center gap-5">
+          <div className="border-[3px] border-trazo bg-naranja shadow-brutal p-5">
             <AlertTriangle size={40} strokeWidth={2.5} className="text-ink" />
           </div>
           <h1 className="font-mono font-bold text-xl text-fg uppercase">
@@ -38,7 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <button
             type="button"
             onClick={this.reiniciar}
-            className="border-[3px] border-ink bg-naranja text-ink font-mono font-bold uppercase px-5 py-3 shadow-brutal cursor-pointer"
+            className="border-[3px] border-trazo bg-naranja text-ink font-mono font-bold uppercase px-5 py-3 shadow-brutal cursor-pointer"
           >
             <span className="flex items-center gap-2">
               <RotateCcw size={18} strokeWidth={3} />

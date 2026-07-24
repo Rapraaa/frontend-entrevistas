@@ -66,7 +66,7 @@ export function Profile() {
     <div className="max-w-2xl w-full mx-auto p-6 flex flex-col gap-6">
       <div>
         <h1 className="font-mono font-bold text-4xl text-fg uppercase leading-none">Mi perfil</h1>
-        <div className="h-1.5 w-24 bg-naranja border-2 border-ink mt-2" />
+        <div className="h-1.5 w-24 bg-naranja border-2 border-trazo mt-2" />
       </div>
 
       <Card className="flex flex-col gap-6">

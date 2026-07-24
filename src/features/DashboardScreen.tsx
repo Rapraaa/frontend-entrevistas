@@ -6,7 +6,7 @@ import {
 } from 'recharts';
 import {
   Layers, TrendingUp, Trophy, CheckCircle2, BarChart3,
-  PieChart as PieIcon, History, Inbox, Plus, ChevronRight,
+  PieChart as PieIcon, History, Inbox, Plus, ChevronRight, Rocket,
 } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -17,11 +17,11 @@ import { getHistory } from '../lib/interviews';
 import { ApiError } from '../lib/api';
 import type { Interview } from '../lib/types';
 
-const INK = '#141110';
+const INK = 'var(--trazo)';
 // Los ejes/rejilla usan la variable del tema para que se vean en claro Y en oscuro.
 const EJE = 'var(--fg)';
 const TOOLTIP = {
-  border: `2px solid ${INK}`,
+  border: '2px solid var(--trazo)',
   borderRadius: 0,
   fontFamily: 'monospace',
   background: 'var(--surface)',
@@ -34,13 +34,15 @@ export function DashboardScreen() {
 
   const [history, setHistory] = useState<Interview[]>([]);
   const [error, setError] = useState('');
+  const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
     getHistory()
       .then(setHistory)
       .catch((err) =>
         setError(err instanceof ApiError ? err.message : 'Error al cargar el historial'),
-      );
+      )
+      .finally(() => setCargando(false));
   }, []);
 
   const completadas = history.filter((h) => h.status === 'completed');
@@ -49,8 +51,9 @@ export function DashboardScreen() {
     .filter((s): s is number => typeof s === 'number');
   const averageScore = scores.length
     ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-    : 0;
-  const bestScore = scores.length ? Math.max(...scores) : 0;
+    : null;
+  const bestScore = scores.length ? Math.max(...scores) : null;
+  const sinDatos = !cargando && history.length === 0;
 
   const porMes = useMemo(() => {
     const map = new Map<string, number>();
@@ -81,7 +84,7 @@ export function DashboardScreen() {
           <h1 className="font-mono font-bold text-4xl text-fg uppercase leading-none">
             Mi Dashboard
           </h1>
-          <div className="h-1.5 w-24 bg-naranja border-2 border-ink mt-2" />
+          <div className="h-1.5 w-24 bg-naranja border-2 border-trazo mt-2" />
           <p className="font-mono text-sm text-muted mt-3">
             Resumen de tus entrevistas de simulación.
           </p>
@@ -94,21 +97,66 @@ export function DashboardScreen() {
       </div>
 
       {error && (
-        <div className="p-3 border-2 border-ink bg-rojo text-ink font-mono font-bold">{error}</div>
+        <div role="alert" className="p-3 border-2 border-trazo bg-rojo text-ink font-mono font-bold">
+          {error}
+        </div>
+      )}
+
+      {sinDatos && (
+        <div className="border-[3px] border-trazo bg-lila text-ink shadow-brutal p-6 flex flex-col md:flex-row md:items-center gap-5 aparece">
+          <div className="border-[3px] border-ink bg-surface shadow-brutal p-4 shrink-0 self-start">
+            <Rocket size={32} strokeWidth={2.5} className="text-fg" />
+          </div>
+          <div className="flex-1">
+            <h2 className="font-mono font-bold text-xl uppercase">Tu primera simulación te espera</h2>
+            <p className="font-mono text-sm mt-2 max-w-xl">
+              Elige un rol y unas tecnologías, y una IA te entrevistará como lo haría un reclutador
+              técnico. Al terminar recibes un reporte con tu puntaje y qué mejorar. Dura unos 15
+              minutos y puedes salir cuando quieras.
+            </p>
+          </div>
+          <Button variante="primario" onClick={() => navigate('/setup')} className="shrink-0">
+            <span className="flex items-center gap-2">
+              <Plus size={18} strokeWidth={3} /> EMPEZAR
+            </span>
+          </Button>
+        </div>
       )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Simulaciones" value={history.length} icon={Layers} tono="naranja" />
-        <StatCard label="Promedio" value={averageScore} icon={TrendingUp} tono="verde" />
-        <StatCard label="Mejor puntaje" value={bestScore} icon={Trophy} tono="lila" />
-        <StatCard label="Completadas" value={completadas.length} icon={CheckCircle2} tono="ink" />
+        <StatCard
+          label="Simulaciones"
+          value={cargando ? '—' : history.length}
+          icon={Layers}
+          tono="naranja"
+        />
+        <StatCard
+          label="Promedio"
+          value={cargando || averageScore === null ? '—' : averageScore}
+          detalle={averageScore === null && !cargando ? 'Aún sin practicar' : 'sobre 100'}
+          icon={TrendingUp}
+          tono="verde"
+        />
+        <StatCard
+          label="Mejor puntaje"
+          value={cargando || bestScore === null ? '—' : bestScore}
+          detalle={bestScore === null && !cargando ? 'Aún sin practicar' : 'sobre 100'}
+          icon={Trophy}
+          tono="lila"
+        />
+        <StatCard
+          label="Completadas"
+          value={cargando ? '—' : completadas.length}
+          icon={CheckCircle2}
+          tono="cian"
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="p-0 overflow-hidden lift">
-          <div className="flex items-center gap-2 bg-surface2 border-b-[3px] border-ink px-4 py-3">
+          <div className="flex items-center gap-2 bg-surface2 border-b-[3px] border-trazo px-4 py-3">
             <BarChart3 size={18} strokeWidth={2.5} className="text-fg" />
-            <h3 className="font-mono font-bold text-sm text-fg uppercase">Entrevistas por mes</h3>
+            <h2 className="font-mono font-bold text-sm text-fg uppercase">Entrevistas por mes</h2>
           </div>
           <div className="h-64 p-3">
             {porMes.length === 0 ? (
@@ -132,9 +180,9 @@ export function DashboardScreen() {
         </Card>
 
         <Card className="p-0 overflow-hidden lift">
-          <div className="flex items-center gap-2 bg-surface2 border-b-[3px] border-ink px-4 py-3">
+          <div className="flex items-center gap-2 bg-surface2 border-b-[3px] border-trazo px-4 py-3">
             <PieIcon size={18} strokeWidth={2.5} className="text-fg" />
-            <h3 className="font-mono font-bold text-sm text-fg uppercase">Entrevistas por estado</h3>
+            <h2 className="font-mono font-bold text-sm text-fg uppercase">Entrevistas por estado</h2>
           </div>
           <div className="h-64 p-3">
             {porEstado.length === 0 ? (
@@ -178,10 +226,10 @@ export function DashboardScreen() {
                 <button
                   key={item._id}
                   onClick={() => openInterview(item)}
-                  className={`group flex flex-col md:flex-row items-start md:items-center justify-between gap-3 p-4 text-left hover:bg-surface2 transition-colors ${index !== history.length - 1 ? 'border-b-2 border-ink' : ''}`}
+                  className={`group flex flex-col md:flex-row items-start md:items-center justify-between gap-3 p-4 text-left hover:bg-surface2 transition-colors ${index !== history.length - 1 ? 'border-b-2 border-trazo' : ''}`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 shrink-0 flex items-center justify-center border-2 border-ink bg-naranja font-mono font-bold text-ink">
+                    <div className="w-9 h-9 shrink-0 flex items-center justify-center border-2 border-trazo bg-naranja font-mono font-bold text-ink">
                       {item.config.target_role.slice(0, 1).toUpperCase()}
                     </div>
                     <div className="flex flex-col">
@@ -198,7 +246,7 @@ export function DashboardScreen() {
                     <span className="font-mono font-bold text-2xl text-fg w-12 text-right">
                       {item.evaluation?.score ?? '—'}
                     </span>
-                    <ChevronRight size={18} className="text-muted group-hover:text-naranja transition-colors" />
+                    <ChevronRight size={18} className="text-muted group-hover:text-acento transition-colors" />
                   </div>
                 </button>
               ))}

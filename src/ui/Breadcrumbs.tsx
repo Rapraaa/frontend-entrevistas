@@ -40,7 +40,7 @@ export function Breadcrumbs() {
       aria-label="Ruta de navegación"
       className="px-6 py-2 flex flex-wrap items-center gap-2 font-mono text-xs text-muted border-b-2 border-fg/20"
     >
-      <Link to="/dashboard" className="hover:text-naranja">Inicio</Link>
+      <Link to="/dashboard" className="hover:text-acento">Inicio</Link>
       {partes.map((p, i) => {
         const to = '/' + partes.slice(0, i + 1).join('/');
         const label = LABELS[p] ?? p;
@@ -51,7 +51,7 @@ export function Breadcrumbs() {
             {ultimo || !esRutaReal(to) ? (
               <span className={ultimo ? 'text-fg font-bold' : ''}>{label}</span>
             ) : (
-              <Link to={to} className="hover:text-naranja">{label}</Link>
+              <Link to={to} className="hover:text-acento">{label}</Link>
             )}
           </span>
         );

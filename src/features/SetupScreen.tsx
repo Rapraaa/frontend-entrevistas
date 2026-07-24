@@ -9,6 +9,7 @@ import { Chip } from '../ui/Chip';
 import { getCatalog, createInterview } from '../lib/interviews';
 import { listTechnologies } from '../lib/catalogs';
 import { ApiError } from '../lib/api';
+import { etiqueta } from '../lib/etiquetas';
 
 const FALLBACK = {
   types: ['Técnica', 'Teórica'],
@@ -33,6 +34,7 @@ export function SetupScreen() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [catalogoCaido, setCatalogoCaido] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -58,7 +60,7 @@ export function SetupScreen() {
           setSeniority(names[0]);
         }
       } catch {
-        setError('');
+        setCatalogoCaido(true);
       }
     };
     load();
@@ -112,24 +114,34 @@ export function SetupScreen() {
     <div className="min-h-full flex items-start justify-center p-6">
       <div className="w-full max-w-2xl">
         <Card className="w-full">
-          <h1 className="font-mono font-bold text-2xl text-fg mb-6 uppercase border-b-2 border-ink pb-2">
+          <h1 className="font-mono font-bold text-2xl text-fg mb-6 uppercase border-b-2 border-trazo pb-2">
             Configuración de Simulación
           </h1>
 
-          {error && <div className="mb-4 p-3 border-2 border-ink bg-rojo text-ink font-mono font-bold">{error}</div>}
+          {catalogoCaido && (
+            <div className="mb-4 p-3 border-2 border-trazo bg-amarillo text-ink font-mono text-sm font-bold">
+              No se pudo cargar el catálogo del servidor. Estás viendo las opciones por defecto.
+            </div>
+          )}
+
+          {error && (
+            <div role="alert" className="mb-4 p-3 border-2 border-trazo bg-rojo text-ink font-mono font-bold">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Select label="Tipo de Entrevista" value={interviewType} onChange={(e) => setInterviewType(e.target.value)}>
-                {interviewTypes.map((t) => <option key={t} value={t}>{t}</option>)}
+                {interviewTypes.map((t) => <option key={t} value={t}>{etiqueta(t)}</option>)}
               </Select>
 
               <Select label="Rol Objetivo" value={targetRole} onChange={(e) => setTargetRole(e.target.value)}>
-                {jobRoles.map((r) => <option key={r} value={r}>{r}</option>)}
+                {jobRoles.map((r) => <option key={r} value={r}>{etiqueta(r)}</option>)}
               </Select>
 
               <Select label="Seniority" value={seniority} onChange={(e) => setSeniority(e.target.value)}>
-                {seniorities.map((s) => <option key={s} value={s}>{s}</option>)}
+                {seniorities.map((s) => <option key={s} value={s}>{etiqueta(s)}</option>)}
               </Select>
 
             </div>
@@ -163,8 +175,25 @@ export function SetupScreen() {
               </div>
             </div>
 
-            <div className="flex justify-end mt-4">
-              <Button type="submit" variante="primario" disabled={loading}>
+            <div className="border-2 border-trazo bg-surface2 p-4">
+              <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-muted mb-2">
+                Lo que vas a practicar
+              </p>
+              <p className="font-mono text-sm text-fg">
+                Entrevista <strong>{etiqueta(interviewType)}</strong> para{' '}
+                <strong>{etiqueta(targetRole)}</strong> nivel <strong>{etiqueta(seniority)}</strong>
+                {technologies.length > 0 && (
+                  <> sobre <strong>{technologies.join(', ')}</strong></>
+                )}
+                .
+              </p>
+              <p className="font-mono text-xs text-muted mt-2">
+                Unas 10 preguntas, alrededor de 15 minutos. Puedes guardar y salir cuando quieras.
+              </p>
+            </div>
+
+            <div className="mt-2">
+              <Button type="submit" variante="primario" className="w-full" disabled={loading}>
                 {loading ? 'INICIANDO...' : 'INICIAR SIMULACIÓN'}
               </Button>
             </div>

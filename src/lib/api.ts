@@ -26,6 +26,14 @@ export class ApiError extends Error {
   }
 }
 
+const RUTAS_PUBLICAS = ['/', '/login', '/registro', '/publico', '/auth/callback'];
+
+function esRutaPrivada(pathname: string): boolean {
+  return !RUTAS_PUBLICAS.some(
+    (ruta) => pathname === ruta || (ruta !== '/' && pathname.startsWith(`${ruta}/`)),
+  );
+}
+
 export const http = axios.create({ baseURL: BASE_URL });
 
 http.interceptors.request.use((config) => {
@@ -48,7 +56,7 @@ http.interceptors.response.use(
       // (No aplica al propio login/registro, donde un 401 significa credenciales malas.)
       if (status === 401 && !esLoginORegistro) {
         clearToken();
-        if (window.location.pathname !== '/login') {
+        if (esRutaPrivada(window.location.pathname)) {
           window.location.assign('/login');
         }
       }

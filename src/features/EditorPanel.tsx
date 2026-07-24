@@ -19,7 +19,7 @@ type Props = {
 const COLOR_LOG: Record<string, string> = {
   log: 'text-papel',
   info: 'text-lila',
-  warn: 'text-naranja',
+  warn: 'text-acento',
   error: 'text-rojo',
 };
 
@@ -69,13 +69,13 @@ export function EditorPanel({
   };
 
   const tabCls = (activa: boolean) =>
-    `flex items-center gap-2 px-4 py-3 border-r-2 border-ink font-mono text-sm transition-colors ${
+    `flex items-center gap-2 px-4 py-3 border-r-2 border-trazo font-mono text-sm transition-colors ${
       activa ? 'bg-surface text-fg font-bold' : 'bg-surface2 text-muted hover:text-fg'
     }`;
 
   return (
-    <div className="flex flex-col flex-1 h-full bg-surface border-[3px] border-ink shadow-brutal overflow-hidden">
-      <div className="flex items-center bg-surface2 border-b-[3px] border-ink">
+    <div className="flex flex-col flex-1 h-full bg-surface border-[3px] border-trazo shadow-brutal overflow-hidden">
+      <div className="flex items-center bg-surface2 border-b-[3px] border-trazo">
         <button type="button" onClick={() => setTab('solucion')} className={tabCls(esSolucion)}>
           <FileCode2 size={15} strokeWidth={2.5} /> solucion.{lenguaje.extension}
         </button>
@@ -91,7 +91,7 @@ export function EditorPanel({
           onChange={(e) => onLenguajeChange(e.target.value)}
           aria-label="Lenguaje del editor"
           title="Lenguaje de la solución"
-          className="mr-2 bg-surface border-2 border-ink px-2 py-1 font-mono text-[11px] font-bold text-fg cursor-pointer focus:outline-none"
+          className="mr-2 bg-surface border-2 border-trazo px-2 py-1 font-mono text-[11px] font-bold text-fg cursor-pointer focus:outline-none"
         >
           {LENGUAJES.map((l) => (
             <option key={l.id} value={l.id}>{l.nombre}</option>
@@ -103,7 +103,7 @@ export function EditorPanel({
         <div
           ref={gutterRef}
           aria-hidden="true"
-          className="shrink-0 overflow-hidden select-none border-r-2 border-ink/30 bg-surface2 px-2 py-4 font-mono text-sm leading-6 text-muted text-right"
+          className="shrink-0 overflow-hidden select-none border-r-2 border-trazo/30 bg-surface2 px-2 py-4 font-mono text-sm leading-6 text-muted text-right"
         >
           {Array.from({ length: lineas }, (_, i) => (
             <div key={i}>{i + 1}</div>
@@ -126,7 +126,7 @@ export function EditorPanel({
       </div>
 
       {consola && (
-        <div className="shrink-0 border-t-[3px] border-ink bg-ink text-papel h-44 flex flex-col">
+        <div className="shrink-0 border-t-[3px] border-trazo bg-ink text-papel h-44 flex flex-col">
           <div className="flex items-center gap-2 px-3 py-2 border-b-2 border-papel/20">
             <Terminal size={14} strokeWidth={3} />
             <span className="font-mono text-[11px] font-bold uppercase tracking-widest">Consola</span>
@@ -135,7 +135,7 @@ export function EditorPanel({
             {!corriendo && salida?.estado && (
               <span
                 className={`font-mono text-[11px] font-bold ${
-                  salida.estado === 'Accepted' ? 'text-verde' : 'text-naranja'
+                  salida.estado === 'Accepted' ? 'text-verde' : 'text-acento'
                 }`}
               >
                 {salida.estado}
@@ -150,7 +150,7 @@ export function EditorPanel({
               type="button"
               onClick={() => setConsola(false)}
               aria-label="Cerrar consola"
-              className="hover:text-naranja"
+              className="hover:text-acento"
             >
               <X size={15} strokeWidth={3} />
             </button>
@@ -160,7 +160,7 @@ export function EditorPanel({
             {corriendo && <p className="text-papel/60">Ejecutando en {lenguaje.nombre}_</p>}
 
             {!corriendo && salida?.aviso && (
-              <p className="text-naranja">⚠ {salida.aviso}</p>
+              <p className="text-acento">⚠ {salida.aviso}</p>
             )}
 
             {!corriendo && salida?.timeout && (
@@ -192,7 +192,7 @@ export function EditorPanel({
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-2 border-t-[3px] border-ink p-3">
+      <div className="flex flex-wrap items-center gap-2 border-t-[3px] border-trazo p-3">
         {esSolucion ? (
           <Chip tono="verde">SE ENVÍA</Chip>
         ) : (

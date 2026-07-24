@@ -18,6 +18,7 @@ export type RegisterInput = {
   password: string;
   firstName?: string;
   lastName?: string;
+  seniorityLevel?: string;
 };
 
 type AuthContextValue = {

@@ -9,7 +9,7 @@ type Props = {
 
 export function Navbar({ children, inicio }: Props) {
   return (
-    <nav className="flex items-center justify-between gap-3 bg-surface border-b-[3px] border-ink px-4 md:px-6 py-3">
+    <nav className="flex items-center justify-between gap-3 bg-surface border-b-[3px] border-trazo px-4 md:px-6 py-3">
       <div className="flex items-center gap-3">
         {inicio}
         <Logo />

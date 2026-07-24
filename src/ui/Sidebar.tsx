@@ -26,8 +26,8 @@ export function Sidebar({ abierto = false, onCerrar }: Props) {
 
   const base =
     'flex items-center gap-2.5 px-3 py-2 font-mono text-sm border-2 border-transparent transition-colors';
-  const activo = 'bg-naranja text-ink border-ink font-bold shadow-brutal';
-  const inactivo = 'text-fg hover:bg-surface2 hover:border-ink';
+  const activo = 'bg-naranja text-ink border-trazo font-bold shadow-brutal';
+  const inactivo = 'text-fg hover:bg-surface2 hover:border-trazo';
   const cls = ({ isActive }: { isActive: boolean }) =>
     `${base} ${isActive ? activo : inactivo}`;
 
@@ -43,7 +43,7 @@ export function Sidebar({ abierto = false, onCerrar }: Props) {
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-60 shrink-0 bg-surface border-r-[3px] border-ink flex flex-col gap-1.5 p-3 overflow-y-auto transition-transform duration-200 md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-60 shrink-0 bg-surface border-r-[3px] border-trazo flex flex-col gap-1.5 p-3 overflow-y-auto transition-transform duration-200 md:static md:translate-x-0 ${
           abierto ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

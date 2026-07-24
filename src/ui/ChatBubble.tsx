@@ -14,7 +14,7 @@ const estilos = {
 export function ChatBubble({ children, variante = 'ia' }: Props) {
   const e = estilos[variante];
   return (
-    <div className={`border-2 border-ink shadow-brutal p-3 ${e.fondo}`}>
+    <div className={`border-2 border-trazo shadow-brutal p-3 ${e.fondo}`}>
       <p className={`text-[10px] font-bold uppercase mb-1 ${e.colorEtiqueta}`}> {e.etiqueta} </p>
       <p className={`text-sm leading-relaxed ${e.colorTexto}`}> {children} </p>
     </div>

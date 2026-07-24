@@ -13,7 +13,7 @@ export function Logo({ size = 'md', conTexto = true }: Props) {
   return (
     <div className="flex items-center gap-2.5">
       <div
-        className={`${caja} shrink-0 flex items-center justify-center bg-naranja border-2 border-ink`}
+        className={`${caja} shrink-0 flex items-center justify-center bg-naranja border-2 border-trazo`}
       >
         <Target size={icono} strokeWidth={3} className="text-ink" />
       </div>

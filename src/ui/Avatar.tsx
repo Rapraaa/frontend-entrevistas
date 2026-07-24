@@ -13,7 +13,7 @@ export function Avatar({ iniciales, src, size = 32 }: Props) {
         src={src}
         alt="Foto de perfil"
         style={style}
-        className="object-cover border-2 border-ink"
+        className="object-cover border-2 border-trazo"
       />
     );
   }
@@ -21,7 +21,7 @@ export function Avatar({ iniciales, src, size = 32 }: Props) {
   return (
     <div
       style={style}
-      className="flex items-center justify-center bg-lila border-2 border-ink font-mono font-bold text-xs text-ink"
+      className="flex items-center justify-center bg-lila border-2 border-trazo font-mono font-bold text-xs text-ink"
     >
       {iniciales}
     </div>
