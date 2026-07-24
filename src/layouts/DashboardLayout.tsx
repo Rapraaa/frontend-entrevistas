@@ -6,6 +6,7 @@ import { Footer } from '../ui/Footer';
 import { Breadcrumbs } from '../ui/Breadcrumbs';
 import { Navbar } from '../ui/Navbar';
 import { Avatar } from '../ui/Avatar';
+import { etiqueta } from '../lib/etiquetas';
 import { Chip } from '../ui/Chip';
 import { Button } from '../ui/Button';
 import { ThemeToggle } from '../ui/ThemeToggle';
@@ -36,8 +37,10 @@ export function DashboardLayout() {
               <button
                 type="button"
                 onClick={() => setMenuAbierto(true)}
-                aria-label="Abrir menú"
-                className="md:hidden flex items-center justify-center w-9 h-9 border-2 border-trazo bg-surface2 text-fg"
+                aria-label="Abrir menú de navegación"
+                aria-expanded={menuAbierto}
+                aria-controls="menu-lateral"
+                className="md:hidden flex items-center justify-center w-11 h-11 border-2 border-trazo bg-surface2 text-fg presiona"
               >
                 <Menu size={18} strokeWidth={3} />
               </button>
@@ -46,7 +49,7 @@ export function DashboardLayout() {
             <span className="font-mono text-xs text-fg hidden lg:inline">{user?.email}</span>
             {user?.role && (
               <Chip tono="lila" className="hidden sm:inline-flex">
-                {user.role.toUpperCase()}
+                {etiqueta(user.role)}
               </Chip>
             )}
             <Avatar iniciales={iniciales} src={profile?.profilePicture} />

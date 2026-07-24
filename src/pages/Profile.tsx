@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, type ChangeEvent } from 'react';
 import { Card } from '../ui/Card';
+import { etiqueta } from '../lib/etiquetas';
 import { Chip } from '../ui/Chip';
 import { Button } from '../ui/Button';
 import { Avatar } from '../ui/Avatar';
@@ -13,6 +14,11 @@ const MAX_BYTES = 500 * 1024;
 function nombreRol(r: UserProfile['role']): string {
   if (!r) return '—';
   return typeof r === 'string' ? r : (r.name ?? '—');
+}
+
+function texto(v: { name: string } | string | undefined): string {
+  if (!v) return '';
+  return typeof v === 'string' ? v : (v.name ?? '');
 }
 
 export function Profile() {
@@ -74,7 +80,7 @@ export function Profile() {
           <Avatar iniciales={iniciales} src={profile?.profilePicture} size={80} />
           <div className="flex flex-col gap-2">
             <p className="font-mono font-bold text-xl text-fg">{nombre || user?.email}</p>
-            <Chip tono="lila">{(user?.role ?? 'usuario').toUpperCase()}</Chip>
+            <Chip tono="lila">{etiqueta(nombreRol(profile?.role)) || etiqueta(user?.role) || 'Usuario'}</Chip>
             <div>
               <input
                 ref={inputRef}
@@ -90,26 +96,29 @@ export function Profile() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4">
+        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t-2 border-trazo pt-5">
           <div>
-            <h3 className="font-mono text-xs font-bold uppercase text-muted mb-1">Correo</h3>
-            <p className="font-mono text-sm text-fg">{profile?.email ?? user?.email ?? '—'}</p>
-          </div>
-          {nombre && (
-            <div>
-              <h3 className="font-mono text-xs font-bold uppercase text-muted mb-1">Nombre</h3>
-              <p className="font-mono text-sm text-fg">{nombre}</p>
-            </div>
-          )}
-          <div>
-            <h3 className="font-mono text-xs font-bold uppercase text-muted mb-1">Rol</h3>
-            <p className="font-mono text-sm text-fg">{profile ? nombreRol(profile.role) : (user?.role ?? '—')}</p>
+            <dt className="font-mono text-xs font-bold uppercase text-muted mb-1">Correo</dt>
+            <dd className="font-mono text-sm text-fg break-all">
+              {profile?.email ?? user?.email ?? '—'}
+            </dd>
           </div>
           <div>
-            <h3 className="font-mono text-xs font-bold uppercase text-muted mb-1">ID de usuario</h3>
-            <p className="font-mono text-xs text-muted break-all">{user?.id ?? '—'}</p>
+            <dt className="font-mono text-xs font-bold uppercase text-muted mb-1">Nivel</dt>
+            <dd className="font-mono text-sm text-fg">
+              {texto(profile?.seniorityLevel) ? etiqueta(texto(profile?.seniorityLevel)) : 'Sin especificar'}
+            </dd>
           </div>
-        </div>
+        </dl>
+
+        <details className="border-2 border-trazo bg-surface2 px-4 py-3">
+          <summary className="cursor-pointer font-mono text-xs font-bold uppercase text-muted">
+            Datos técnicos de la cuenta
+          </summary>
+          <p className="mt-3 font-mono text-[11px] text-muted break-all">
+            ID: {user?.id ?? '—'}
+          </p>
+        </details>
       </Card>
     </div>
   );
