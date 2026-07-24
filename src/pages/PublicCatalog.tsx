@@ -74,8 +74,18 @@ export function PublicCatalog() {
 
         <div className="flex flex-wrap gap-2">
           {CATALOGS.map((c) => (
-            <Link key={c.slug} to={`/publico/${c.slug}`}>
-              <Chip tono={c.slug === slug ? 'lila' : 'neutro'} className={c.slug === slug ? 'shadow-brutal' : ''}>{c.label}</Chip>
+            <Link
+              key={c.slug}
+              to={`/publico/${c.slug}`}
+              aria-current={c.slug === slug ? 'page' : undefined}
+              className="inline-flex min-h-[44px] items-center"
+            >
+              <Chip
+                tono={c.slug === slug ? 'lila' : 'neutro'}
+                className={`px-3 py-2 ${c.slug === slug ? 'shadow-brutal' : ''}`}
+              >
+                {c.label}
+              </Chip>
             </Link>
           ))}
         </div>
