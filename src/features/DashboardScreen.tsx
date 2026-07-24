@@ -110,7 +110,7 @@ export function DashboardScreen() {
             <BarChart3 size={18} strokeWidth={2.5} className="text-fg" />
             <h3 className="font-mono font-bold text-sm text-fg uppercase">Entrevistas por mes</h3>
           </div>
-          <div className="h-64 p-3">
+          <div className="h-64 p-3 flex items-center justify-center">
             {porMes.length === 0 ? (
               <EmptyState
                 icon={Inbox}
@@ -119,12 +119,12 @@ export function DashboardScreen() {
               />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={porMes}>
+                <BarChart data={porMes} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="4 4" stroke={EJE} opacity={0.2} vertical={false} />
-                  <XAxis dataKey="mes" stroke={EJE} fontSize={11} tickLine={false} />
-                  <YAxis stroke={EJE} fontSize={11} allowDecimals={false} tickLine={false} />
-                  <Tooltip contentStyle={TOOLTIP} />
-                  <Bar dataKey="total" fill="#e8622c" stroke={INK} strokeWidth={2} />
+                  <XAxis dataKey="mes" stroke={EJE} fontSize={11} tickLine={false} axisLine={{ strokeWidth: 2 }} />
+                  <YAxis stroke={EJE} fontSize={11} allowDecimals={false} tickLine={false} axisLine={{ strokeWidth: 2 }} />
+                  <Tooltip contentStyle={TOOLTIP} cursor={{ fill: EJE, opacity: 0.1 }} />
+                  <Bar dataKey="total" fill="#e8622c" stroke={INK} strokeWidth={2} barSize={45} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -136,7 +136,7 @@ export function DashboardScreen() {
             <PieIcon size={18} strokeWidth={2.5} className="text-fg" />
             <h3 className="font-mono font-bold text-sm text-fg uppercase">Entrevistas por estado</h3>
           </div>
-          <div className="h-64 p-3">
+          <div className="h-64 p-3 flex items-center justify-center">
             {porEstado.length === 0 ? (
               <EmptyState
                 icon={Inbox}
@@ -145,13 +145,20 @@ export function DashboardScreen() {
               />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={porEstado} dataKey="value" nameKey="name" outerRadius={85} label>
+                <PieChart margin={{ top: 20, right: 20, left: 20, bottom: 5 }}>
+                  <Pie 
+                    data={porEstado} 
+                    dataKey="value" 
+                    nameKey="name" 
+                    cx="50%" 
+                    cy="50%" 
+                    outerRadius={80} 
+                  >
                     {porEstado.map((_, i) => (
                       <Cell key={i} fill={COLORS[i % COLORS.length]} stroke={INK} strokeWidth={2} />
                     ))}
                   </Pie>
-                  <Legend />
+                  <Legend wrapperStyle={{ fontFamily: 'monospace', fontSize: '12px', fontWeight: 'bold' }} />
                   <Tooltip contentStyle={TOOLTIP} />
                 </PieChart>
               </ResponsiveContainer>
